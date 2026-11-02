@@ -1,144 +1,253 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#090b18">
-<title>DUBI - Every Language</title>
-
+<meta name="theme-color" content="#090a0f">
+<title>DUBI | One Movie. Every Language.</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{
- background:#090b18;color:#fff;
- font-family:Arial,sans-serif;
- padding-bottom:75px
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#090a0f;color:white;font-family:Arial,sans-serif}
+header{height:68px;padding:0 5%;display:flex;align-items:center;justify-content:space-between;background:#090a0f;position:sticky;top:0;z-index:10;border-bottom:1px solid #252630}
+.logo{font-size:30px;font-weight:900;letter-spacing:2px;color:#ed1725}
+nav{display:flex;gap:20px}
+nav a{color:#ddd;text-decoration:none;font-size:14px;cursor:pointer}
+nav a:hover{color:#ed1725}
+.actions{display:flex;gap:10px}
+input,select{background:#1c1e28;color:white;border:1px solid #414451;border-radius:6px;padding:10px;max-width:150px}
+.hero{min-height:440px;padding:65px 7%;display:flex;align-items:center;background:linear-gradient(90deg,#090a0f 5%,#090a0fcc 60%,transparent),linear-gradient(0deg,#090a0f,transparent 65%),url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1600') center/cover}
+.hero-content{max-width:550px}
+.tag{color:#ff4652;font-size:12px;font-weight:bold;letter-spacing:2px}
+.hero h1{font-size:clamp(40px,7vw,68px);margin:15px 0}
+.hero p{line-height:1.7;color:#ddd;font-size:15px}
+.buttons{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+.btn{padding:12px 22px;border:0;border-radius:5px;font-weight:bold;cursor:pointer}
+.primary{background:#e50914;color:white}
+.secondary{background:#ffffff25;color:white;border:1px solid #ffffff55}
+main{padding:15px 5% 50px}
+.section{margin:30px 0}
+.heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.heading h2{font-size:21px}
+.heading span{font-size:12px;color:#999}
+.movie-row{display:flex;gap:15px;overflow-x:auto;padding:5px 2px 18px;scrollbar-width:thin}
+.movie{flex:0 0 160px;cursor:pointer}
+.poster{height:225px;border-radius:9px;background:#252733 center/cover;position:relative;overflow:hidden;transition:.2s}
+.poster:hover{transform:scale(1.04)}
+.rating{position:absolute;top:9px;left:9px;background:#000b;padding:5px 8px;border-radius:5px;font-size:11px}
+.movie-title{font-size:14px;font-weight:bold;margin-top:9px}
+.meta{font-size:11px;color:#aaa;margin-top:5px}
+.movie-actions{display:flex;gap:6px;margin-top:9px}
+.small{padding:7px 9px;border-radius:5px;background:#242733;color:white;border:1px solid #444;font-size:11px;cursor:pointer}
+.small.saved{background:#21452e}
+.empty{color:#aaa;padding:20px 0}
+footer{border-top:1px solid #252733;padding:30px 5%;color:#aaa;font-size:12px;line-height:2}
+.modal{display:none;position:fixed;inset:0;background:#000d;z-index:30;align-items:center;justify-content:center;padding:15px}
+.modal.show{display:flex}
+.modal-box{width:100%;max-width:500px;background:#191b25;border-radius:12px;overflow:hidden}
+.modal-poster{height:220px;background:center/cover}
+.modal-content{padding:22px}
+.modal-content h2{font-size:27px;margin-bottom:8px}
+.modal-content p{color:#ccc;line-height:1.6;margin:14px 0;font-size:14px}
+.close{float:right;background:#333;color:white;border:0;padding:7px 10px;border-radius:50%;cursor:pointer}
+.notice{font-size:11px;color:#999}
+@media(max-width:700px){
+header{height:auto;padding:12px 4%;flex-wrap:wrap;gap:12px}
+nav{order:3;width:100%;justify-content:space-between}
+nav a{font-size:12px}
+input,select{padding:8px;font-size:12px;max-width:120px}
+.hero{min-height:370px;padding:45px 6%}
+main{padding-left:4%;padding-right:4%}
+.movie{flex-basis:135px}
+.poster{height:195px}
+.heading h2{font-size:18px}
 }
-header{
- display:flex;justify-content:space-between;
- align-items:center;padding:18px 5%;
- background:#101326;
- position:sticky;top:0;z-index:5
-}
-.logo{font-size:29px;font-weight:900;color:#9b7cff}
-.logo span{color:#fff}
-.profile{
- background:#252944;border-radius:50%;
- padding:10px;font-size:19px
-}
-.hero{
- margin:18px 4%;padding:35px 22px;
- min-height:240px;border-radius:18px;
- background:linear-gradient(120deg,#40228a,#121a42 75%,#15152c);
- display:flex;flex-direction:column;
- justify-content:center
-}
-.hero small{color:#d5c8ff;letter-spacing:2px}
-.hero h1{font-size:34px;margin:12px 0}
-.hero p{color:#ddd;line-height:1.5}
-.btn{
- margin-top:20px;padding:12px 22px;
- border:0;border-radius:8px;
- background:#9875ff;color:white;
- font-size:15px;font-weight:bold;width:max-content
-}
-.languages{padding:15px 4%;overflow:auto;white-space:nowrap}
-.languages button{
- background:#20243c;color:white;
- border:1px solid #414767;
- border-radius:20px;padding:9px 16px;
- margin-right:8px
-}
-section{margin:22px 0}
-.heading{font-size:20px;padding:0 4%;margin-bottom:14px}
-.movies{
- display:flex;gap:13px;overflow-x:auto;
- padding:0 4% 12px
-}
-.movie{min-width:135px;width:135px}
-.poster{
- height:185px;border-radius:12px;
- display:flex;align-items:center;
- justify-content:center;text-align:center;
- padding:10px;font-size:19px;font-weight:bold;
- background:linear-gradient(145deg,#593a96,#18264a)
-}
-.movie:nth-child(2) .poster{background:linear-gradient(145deg,#9a4a47,#28203e)}
-.movie:nth-child(3) .poster{background:linear-gradient(145deg,#176e75,#17223e)}
-.movie:nth-child(4) .poster{background:linear-gradient(145deg,#9c6630,#27203b)}
-.movie p{font-size:14px;margin-top:8px}
-.movie small{color:#a9a9bd;font-size:11px}
-footer{
- position:fixed;bottom:0;left:0;right:0;
- background:#14172a;display:flex;
- justify-content:space-around;padding:15px 5px;
- border-top:1px solid #292d45;z-index:10
-}
-footer span{font-size:12px;color:#c6c4d7}
-footer span:first-child{color:#a78bfa}
 </style>
 </head>
-
 <body>
 
 <header>
- <div class="logo">DUBI<span>.</span></div>
- <div class="profile">👤</div>
+<div class="logo">DUBI.</div>
+<nav>
+<a onclick="home()">Home</a>
+<a href="#trending">Trending</a>
+<a href="#categories">Categories</a>
+<a href="#mylist">My List</a>
+</nav>
+<div class="actions">
+<input id="search" placeholder="Search..." oninput="searchMovies()">
+<select id="language" onchange="changeLanguage()">
+<option>English</option>
+<option>বাংলা</option>
+<option>हिन्दी</option>
+<option>العربية</option>
+<option>한국어</option>
+</select>
+</div>
 </header>
 
-<div class="hero">
- <small>ONE VIDEO. EVERY LANGUAGE.</small>
- <h1>Movies Without<br>Language Limits.</h1>
- <p>Watch your favourite videos in the language you love.</p>
- <button class="btn" onclick="document.getElementById('trending').scrollIntoView({behavior:'smooth'})">
-  Explore Movies ▶
- </button>
+<section class="hero">
+<div class="hero-content">
+<div class="tag">WELCOME TO DUBI ORIGINAL</div>
+<h1>One Movie.<br>Every Language.</h1>
+<p>Discover movies from around the world. Choose your language and enjoy stories without borders.</p>
+<div class="buttons">
+<button class="btn primary" onclick="document.getElementById('trending').scrollIntoView({behavior:'smooth'})">▶ Explore Movies</button>
+<button class="btn secondary" onclick="document.getElementById('categories').scrollIntoView({behavior:'smooth'})">Browse Categories</button>
 </div>
-
-<div class="languages">
- <button>🌐 All</button>
- <button>বাংলা</button>
- <button>English</button>
- <button>हिन्दी</button>
- <button>한국어</button>
- <button>العربية</button>
 </div>
-
-<section id="trending">
- <h2 class="heading">🔥 Trending Now</h2>
- <div class="movies">
-  <div class="movie"><div class="poster">THE<br>ADVENTURE</div><p>The Adventure</p><small>Action • English</small></div>
-  <div class="movie"><div class="poster">DARK<br>WORLD</div><p>Dark World</p><small>Thriller • Hindi</small></div>
-  <div class="movie"><div class="poster">LOST<br>IN TIME</div><p>Lost in Time</p><small>Sci-Fi • English</small></div>
-  <div class="movie"><div class="poster">THE<br>SECRET</div><p>The Secret</p><small>Mystery • Korean</small></div>
- </div>
 </section>
 
-<section>
- <h2 class="heading">🎬 Popular Worldwide</h2>
- <div class="movies">
-  <div class="movie"><div class="poster">BEYOND<br>THE SKY</div><p>Beyond the Sky</p><small>Adventure</small></div>
-  <div class="movie"><div class="poster">LAST<br>MISSION</div><p>Last Mission</p><small>Action</small></div>
-  <div class="movie"><div class="poster">DREAM<br>LAND</div><p>Dream Land</p><small>Fantasy</small></div>
-  <div class="movie"><div class="poster">HIDDEN<br>TRUTH</div><p>Hidden Truth</p><small>Drama</small></div>
- </div>
+<main>
+<section class="section" id="searchResults" style="display:none">
+<div class="heading"><h2>Search Results</h2></div>
+<div class="movie-row" id="searchRow"></div>
 </section>
 
-<section>
- <h2 class="heading">🇧🇩 Bangla Collection</h2>
- <div class="movies">
-  <div class="movie"><div class="poster">BANGLA<br>STORY</div><p>Bangla Story</p><small>Drama</small></div>
-  <div class="movie"><div class="poster">NEW<br>HORIZON</div><p>New Horizon</p><small>Adventure</small></div>
-  <div class="movie"><div class="poster">THE<br>JOURNEY</div><p>The Journey</p><small>Romance</small></div>
- </div>
+<section class="section" id="trending">
+<div class="heading"><h2>🔥 Trending Now</h2><span>Popular picks</span></div>
+<div class="movie-row" id="trendingRow"></div>
 </section>
+
+<div id="categories">
+<section class="section">
+<div class="heading"><h2>🌎 Popular Worldwide</h2></div>
+<div class="movie-row" id="worldRow"></div>
+</section>
+<section class="section">
+<div class="heading"><h2>🎬 Hollywood</h2></div>
+<div class="movie-row" id="hollywoodRow"></div>
+</section>
+<section class="section">
+<div class="heading"><h2>🇮🇳 Bollywood</h2></div>
+<div class="movie-row" id="bollywoodRow"></div>
+</section>
+<section class="section">
+<div class="heading"><h2>🇧🇩 Bangla Movies</h2></div>
+<div class="movie-row" id="banglaRow"></div>
+</section>
+<section class="section">
+<div class="heading"><h2>🇰🇷 Korean Movies</h2></div>
+<div class="movie-row" id="koreanRow"></div>
+</section>
+<section class="section" id="mylist">
+<div class="heading"><h2>＋ My List</h2><span>Your saved movies</span></div>
+<div class="movie-row" id="myListRow"></div>
+<div class="empty" id="emptyList">Your list is empty. Add movies using the + My List button.</div>
+</section>
+</div>
+<p class="notice">Demo version: movie titles and posters are sample content. No movies are streamed in this version.</p>
+</main>
 
 <footer>
- <span>⌂ Home</span>
- <span>⌕ Search</span>
- <span>🌐 Languages</span>
- <span>♡ My List</span>
- <span>👤 Profile</span>
+<div class="logo" style="font-size:22px">DUBI.</div>
+<p>One Movie. Every Language.</p>
+<p>© 2026 DUBI. A multilingual movie experience.</p>
 </footer>
 
+<div class="modal" id="movieModal" onclick="if(event.target===this)closeModal()">
+<div class="modal-box">
+<div class="modal-poster" id="modalPoster"></div>
+<div class="modal-content">
+<button class="close" onclick="closeModal()">✕</button>
+<h2 id="modalTitle">Movie Title</h2>
+<div class="meta" id="modalMeta"></div>
+<p id="modalDescription"></p>
+<div class="buttons">
+<button class="btn primary" onclick="demoPlay()">▶ Play</button>
+<button class="btn secondary" id="modalSave" onclick="toggleModalSave()">＋ My List</button>
+</div>
+<p class="notice" id="modalNotice">Video playback will be added in a future version.</p>
+</div>
+</div>
+</div>
+
+<script>
+const movies=[
+{id:1,title:"The Last Journey",year:"2025",genre:"Adventure",rating:"8.8",category:"Hollywood",image:"photo-1440404653325-ab127d49abc1",description:"An unforgettable journey through a mysterious world."},
+{id:2,title:"Beyond the Stars",year:"2025",genre:"Sci-Fi",rating:"9.0",category:"Hollywood",image:"photo-1518709268805-4e9042af9f23",description:"A thrilling adventure beyond imagination."},
+{id:3,title:"Shadow City",year:"2024",genre:"Action",rating:"8.5",category:"Hollywood",image:"photo-1519608487953-e999c86e7455",description:"One city. One secret. One final mission."},
+{id:4,title:"The Royal Secret",year:"2025",genre:"Drama",rating:"8.7",category:"Bollywood",image:"photo-1518837695005-2083093ee35b",description:"A powerful story of love, family and destiny."},
+{id:5,title:"Love Again",year:"2024",genre:"Romance",rating:"8.2",category:"Bollywood",image:"photo-1470252649378-9c29740c9fa8",description:"Two hearts meet when they least expect it."},
+{id:6,title:"The Silent Night",year:"2025",genre:"Thriller",rating:"8.9",category:"Korean",image:"photo-1470770841072-f978cf4d019e",description:"A mysterious night changes everything."},
+{id:7,title:"Dream of Dhaka",year:"2025",genre:"Drama",rating:"8.4",category:"Bangla",image:"photo-1518005020951-eccb494ad742",description:"A story of dreams, friendship and life in the city."},
+{id:8,title:"The Lost Kingdom",year:"2024",genre:"Fantasy",rating:"8.6",category:"Korean",image:"photo-1500530855697-b586d89ba3ee",description:"An ancient kingdom hides a forgotten truth."},
+{id:9,title:"Dark Horizon",year:"2025",genre:"Horror",rating:"8.3",category:"Hollywood",image:"photo-1500534623283-312aade485b7",description:"Something is waiting beyond the darkness."},
+{id:10,title:"Moner Thikana",year:"2024",genre:"Romance",rating:"8.1",category:"Bangla",image:"photo-1470071459604-3b5ec3a7fe05",description:"A heartfelt story about finding a place to belong."},
+{id:11,title:"The Great Escape",year:"2025",genre:"Action",rating:"8.7",category:"Bollywood",image:"photo-1500534314209-a25ddb2bd429",description:"A race against time with everything at stake."},
+{id:12,title:"Winter Memories",year:"2024",genre:"Drama",rating:"8.5",category:"Korean",image:"photo-1483347756197-71ef80e95f73",description:"A beautiful story of memories and second chances."}
+];
+
+let saved=JSON.parse(localStorage.getItem("dubiSaved")||"[]");
+let activeMovie=null;
+
+function posterUrl(movie){
+return "https://images.unsplash.com/"+movie.image+"?auto=format&fit=crop&w=500&q=80";
+}
+function card(movie){
+let yes=saved.includes(movie.id);
+return `<article class="movie">
+<div class="poster" style="background-image:url('${posterUrl(movie)}')" onclick="openMovie(${movie.id})">
+<span class="rating">★ ${movie.rating}</span></div>
+<div class="movie-title">${movie.title}</div>
+<div class="meta">${movie.year} • ${movie.genre}</div>
+<div class="movie-actions">
+<button class="small" onclick="openMovie(${movie.id})">Details</button>
+<button class="small ${yes?'saved':''}" onclick="toggleSave(${movie.id})">${yes?'✓ Saved':'+ My List'}</button>
+</div></article>`;
+}
+function renderRow(id,list){
+document.getElementById(id).innerHTML=list.length?list.map(card).join(""):"";
+}
+function renderAll(){
+renderRow("trendingRow",movies.slice(0,6));
+renderRow("worldRow",[...movies].sort((a,b)=>Number(b.rating)-Number(a.rating)).slice(0,8));
+renderRow("hollywoodRow",movies.filter(m=>m.category==="Hollywood"));
+renderRow("bollywoodRow",movies.filter(m=>m.category==="Bollywood"));
+renderRow("banglaRow",movies.filter(m=>m.category==="Bangla"));
+renderRow("koreanRow",movies.filter(m=>m.category==="Korean"));
+let list=movies.filter(m=>saved.includes(m.id));
+renderRow("myListRow",list);
+document.getElementById("emptyList").style.display=list.length?"none":"block";
+}
+function toggleSave(id){
+saved=saved.includes(id)?saved.filter(x=>x!==id):[...saved,id];
+localStorage.setItem("dubiSaved",JSON.stringify(saved));
+renderAll();
+if(activeMovie&&activeMovie.id===id)updateModalSave();
+}
+function openMovie(id){
+activeMovie=movies.find(m=>m.id===id);
+document.getElementById("modalPoster").style.backgroundImage=`url('${posterUrl(activeMovie)}')`;
+document.getElementById("modalTitle").textContent=activeMovie.title;
+document.getElementById("modalMeta").textContent=`${activeMovie.year} • ${activeMovie.genre} • ★ ${activeMovie.rating}`;
+document.getElementById("modalDescription").textContent=activeMovie.description;
+document.getElementById("movieModal").classList.add("show");
+document.getElementById("modalNotice").textContent="Video playback will be added in a future version.";
+updateModalSave();
+}
+function updateModalSave(){
+document.getElementById("modalSave").textContent=saved.includes(activeMovie.id)?"✓ Saved":"＋ My List";
+}
+function toggleModalSave(){if(activeMovie)toggleSave(activeMovie.id)}
+function closeModal(){document.getElementById("movieModal").classList.remove("show")}
+function demoPlay(){
+document.getElementById("modalNotice").textContent="This is a design demo. Real video playback and dubbed audio will come later.";
+}
+function searchMovies(){
+let q=document.getElementById("search").value.trim().toLowerCase();
+document.getElementById("searchResults").style.display=q?"block":"none";
+if(q){
+let result=movies.filter(m=>(m.title+" "+m.genre+" "+m.category).toLowerCase().includes(q));
+renderRow("searchRow",result);
+if(!result.length)document.getElementById("searchRow").innerHTML='<p class="empty">No movies found.</p>';
+}
+}
+function changeLanguage(){
+alert("Selected language: "+document.getElementById("language").value+"\nAudio dubbing will be added in a future version.");
+}
+function home(){window.scrollTo({top:0,behavior:"smooth"})}
+renderAll();
+</script>
 </body>
 </html>
