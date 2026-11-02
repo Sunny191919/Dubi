@@ -4,250 +4,290 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#090a0f">
-<title>DUBI | One Movie. Every Language.</title>
+<meta name="theme-color" content="#08090e">
+<title>DUBI - One Movie. Every Language.</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:#090a0f;color:white;font-family:Arial,sans-serif}
-header{height:68px;padding:0 5%;display:flex;align-items:center;justify-content:space-between;background:#090a0f;position:sticky;top:0;z-index:10;border-bottom:1px solid #252630}
-.logo{font-size:30px;font-weight:900;letter-spacing:2px;color:#ed1725}
-nav{display:flex;gap:20px}
+:root{--bg:#08090e;--panel:#151720;--red:#e50925;--muted:#a5a7b1;--white:#fff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:white;font-family:Arial, sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+header{height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 5%;background:#090a0fee;position:sticky;top:0;z-index:10;border-bottom:1px solid #ffffff12}
+.logo{font-size:27px;font-weight:900;color:#f21d3c;letter-spacing:2px}
+.logo span{color:white}
+nav{display:flex;gap:23px;align-items:center}
 nav a{color:#ddd;text-decoration:none;font-size:14px;cursor:pointer}
-nav a:hover{color:#ed1725}
-.actions{display:flex;gap:10px}
-input,select{background:#1c1e28;color:white;border:1px solid #414451;border-radius:6px;padding:10px;max-width:150px}
-.hero{min-height:440px;padding:65px 7%;display:flex;align-items:center;background:linear-gradient(90deg,#090a0f 5%,#090a0fcc 60%,transparent),linear-gradient(0deg,#090a0f,transparent 65%),url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1600') center/cover}
-.hero-content{max-width:550px}
-.tag{color:#ff4652;font-size:12px;font-weight:bold;letter-spacing:2px}
-.hero h1{font-size:clamp(40px,7vw,68px);margin:15px 0}
-.hero p{line-height:1.7;color:#ddd;font-size:15px}
-.buttons{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
-.btn{padding:12px 22px;border:0;border-radius:5px;font-weight:bold;cursor:pointer}
-.primary{background:#e50914;color:white}
-.secondary{background:#ffffff25;color:white;border:1px solid #ffffff55}
-main{padding:15px 5% 50px}
-.section{margin:30px 0}
-.heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
-.heading h2{font-size:21px}
-.heading span{font-size:12px;color:#999}
-.movie-row{display:flex;gap:15px;overflow-x:auto;padding:5px 2px 18px;scrollbar-width:thin}
-.movie{flex:0 0 160px;cursor:pointer}
-.poster{height:225px;border-radius:9px;background:#252733 center/cover;position:relative;overflow:hidden;transition:.2s}
-.poster:hover{transform:scale(1.04)}
-.rating{position:absolute;top:9px;left:9px;background:#000b;padding:5px 8px;border-radius:5px;font-size:11px}
-.movie-title{font-size:14px;font-weight:bold;margin-top:9px}
-.meta{font-size:11px;color:#aaa;margin-top:5px}
-.movie-actions{display:flex;gap:6px;margin-top:9px}
-.small{padding:7px 9px;border-radius:5px;background:#242733;color:white;border:1px solid #444;font-size:11px;cursor:pointer}
-.small.saved{background:#21452e}
-.empty{color:#aaa;padding:20px 0}
-footer{border-top:1px solid #252733;padding:30px 5%;color:#aaa;font-size:12px;line-height:2}
-.modal{display:none;position:fixed;inset:0;background:#000d;z-index:30;align-items:center;justify-content:center;padding:15px}
-.modal.show{display:flex}
-.modal-box{width:100%;max-width:500px;background:#191b25;border-radius:12px;overflow:hidden}
-.modal-poster{height:220px;background:center/cover}
-.modal-content{padding:22px}
-.modal-content h2{font-size:27px;margin-bottom:8px}
-.modal-content p{color:#ccc;line-height:1.6;margin:14px 0;font-size:14px}
-.close{float:right;background:#333;color:white;border:0;padding:7px 10px;border-radius:50%;cursor:pointer}
-.notice{font-size:11px;color:#999}
+nav a:hover{color:#f21d3c}
+.header-right{display:flex;gap:10px;align-items:center}
+.search{background:#191b25;border:1px solid #333644;border-radius:22px;padding:10px 14px;color:white;width:170px;outline:none}
+.profile{background:#292c39;border:0;color:white;border-radius:50%;width:36px;height:36px}
+.hero{min-height:470px;padding:75px 6%;display:flex;align-items:center;background:linear-gradient(90deg,#08090e 5%,#08090ecc 48%,#08090e22),linear-gradient(0deg,#08090e,transparent 45%),url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1600') center/cover}
+.hero-content{max-width:560px}
+.tag{color:#ff536a;font-size:12px;font-weight:bold;letter-spacing:3px}
+.hero h1{font-size:clamp(38px,6vw,68px);margin:13px 0}
+.hero p{color:#d0d0d0;line-height:1.7}
+.meta{color:#bbb;font-size:13px;margin:12px 0 22px}
+.btn{border:0;border-radius:5px;padding:12px 20px;font-weight:bold;margin-right:8px}
+.primary{background:var(--red);color:white}
+.secondary{background:#ffffff22;color:white;border:1px solid #ffffff55}
+main{padding:10px 5% 60px}
+.section{margin:28px 0 36px}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.section h2{font-size:21px;margin:0}
+.section-head small{color:var(--muted)}
+.movie-row{display:flex;gap:15px;overflow-x:auto;padding:3px 2px 14px;scrollbar-width:thin}
+.movie{flex:0 0 155px;cursor:pointer;transition:.2s}
+.movie:hover{transform:scale(1.045)}
+.poster{height:220px;border-radius:8px;overflow:hidden;background:#20232e;position:relative}
+.poster img{width:100%;height:100%;object-fit:cover}
+.poster .play-icon{position:absolute;bottom:9px;right:9px;background:#e50925;border-radius:50%;width:33px;height:33px;display:grid;place-items:center}
+.movie h3{font-size:14px;margin:9px 0 4px}
+.movie small{color:#999}
+.empty{color:#999;padding:20px}
+footer{border-top:1px solid #242630;padding:30px 5%;color:#888;text-align:center;font-size:13px}
+.modal{display:none;position:fixed;inset:0;background:#000d;z-index:30;overflow:auto;padding:20px}
+.modal.show{display:block}
+.modal-box{background:#12141d;max-width:850px;margin:20px auto;border:1px solid #343744;border-radius:12px;overflow:hidden}
+.modal-top{display:flex;justify-content:space-between;padding:15px 20px;align-items:center}
+.close{background:#292c38;color:white;border:0;border-radius:50%;width:35px;height:35px;font-size:20px}
+.player{background:#000}
+video{width:100%;max-height:480px;display:block}
+.details{padding:20px}
+.details h2{margin-top:0}
+.details p{color:#bbb;line-height:1.6}
+.controls{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}
+.controls select{background:#242735;color:white;border:1px solid #45495b;padding:10px;border-radius:5px}
+.download{background:#e50925;color:white;border:0;border-radius:5px;padding:12px 18px;font-weight:bold}
+.small-btn{background:#292d3b;color:white;border:1px solid #45495b;padding:10px 15px;border-radius:5px}
+.notice{font-size:12px;color:#999;margin-top:12px}
+.page{display:none}
+.page.active{display:block}
+.form-panel{background:#151720;border:1px solid #303342;border-radius:10px;padding:20px;max-width:600px;margin:25px auto}
+.form-panel input,.form-panel select{width:100%;padding:12px;margin:8px 0 16px;background:#252836;color:white;border:1px solid #414556;border-radius:5px}
+.mobile-nav{display:none}
 @media(max-width:700px){
-header{height:auto;padding:12px 4%;flex-wrap:wrap;gap:12px}
-nav{order:3;width:100%;justify-content:space-between}
-nav a{font-size:12px}
-input,select{padding:8px;font-size:12px;max-width:120px}
-.hero{min-height:370px;padding:45px 6%}
-main{padding-left:4%;padding-right:4%}
-.movie{flex-basis:135px}
-.poster{height:195px}
-.heading h2{font-size:18px}
+ header{padding:0 4%;height:60px}
+ nav{display:none}
+ .search{width:115px}
+ .hero{min-height:390px;padding:45px 5%}
+ main{padding:8px 4% 45px}
+ .movie{flex-basis:125px}
+ .poster{height:180px}
+ .mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:#11131c;border-top:1px solid #333;padding:12px 5%;justify-content:space-around;z-index:15}
+ .mobile-nav button{background:none;color:#ddd;border:0;font-size:12px}
+ footer{padding-bottom:80px}
 }
 </style>
 </head>
 <body>
 
 <header>
-<div class="logo">DUBI.</div>
-<nav>
-<a onclick="home()">Home</a>
-<a href="#trending">Trending</a>
-<a href="#categories">Categories</a>
-<a href="#mylist">My List</a>
-</nav>
-<div class="actions">
-<input id="search" placeholder="Search..." oninput="searchMovies()">
-<select id="language" onchange="changeLanguage()">
-<option>English</option>
-<option>বাংলা</option>
-<option>हिन्दी</option>
-<option>العربية</option>
-<option>한국어</option>
-</select>
-</div>
+ <div class="logo">DU<span>BI</span></div>
+ <nav>
+  <a onclick="showPage('home')">Home</a>
+  <a onclick="showPage('movies')">Movies</a>
+  <a onclick="showPage('series')">Series</a>
+  <a onclick="showPage('downloads')">Downloads</a>
+  <a onclick="showPage('mylist')">My List</a>
+ </nav>
+ <div class="header-right">
+  <input class="search" id="search" placeholder="Search..." oninput="searchMovies()">
+  <button class="profile" onclick="showPage('profile')">👤</button>
+ </div>
 </header>
 
-<section class="hero">
-<div class="hero-content">
-<div class="tag">WELCOME TO DUBI ORIGINAL</div>
-<h1>One Movie.<br>Every Language.</h1>
-<p>Discover movies from around the world. Choose your language and enjoy stories without borders.</p>
-<div class="buttons">
-<button class="btn primary" onclick="document.getElementById('trending').scrollIntoView({behavior:'smooth'})">▶ Explore Movies</button>
-<button class="btn secondary" onclick="document.getElementById('categories').scrollIntoView({behavior:'smooth'})">Browse Categories</button>
+<div id="home" class="page active">
+ <section class="hero">
+  <div class="hero-content">
+   <div class="tag">WELCOME TO DUBI</div>
+   <h1>ONE MOVIE.<br>EVERY LANGUAGE.</h1>
+   <p>Discover movies from around the world. Watch, explore and enjoy entertainment in your preferred language.</p>
+   <div class="meta">✦ Global Cinema &nbsp; • &nbsp; Multiple Languages</div>
+   <button class="btn primary" onclick="openMovie(1)">▶ Explore Now</button>
+   <button class="btn secondary" onclick="showPage('movies')">Browse Movies</button>
+  </div>
+ </section>
+ <main id="homeRows"></main>
 </div>
+
+<div id="movies" class="page"><main><h2>Explore Movies</h2><div id="allMovies"></div></main></div>
+<div id="series" class="page"><main><h2>Series</h2><p class="empty">Series library is coming soon.</p></main></div>
+<div id="mylist" class="page"><main><h2>My List ❤️</h2><div id="savedMovies"></div></main></div>
+<div id="downloads" class="page"><main><h2>My Downloads ⬇</h2><div id="downloadMovies"></div><p class="notice">Downloads are stored by your browser. Actual offline movie downloads need compatible video files and storage support.</p></main></div>
+<div id="profile" class="page"><main><h2>My Profile</h2><div class="form-panel"><h3>Welcome to DUBI</h3><p>Your personal movie space.</p><label>Preferred Language</label><select id="profileLang"><option>Bangla</option><option>English</option><option>Hindi</option><option>Arabic</option><option>Korean</option></select><button class="btn primary" onclick="alert('Preference saved on this device!')">Save Preference</button></div><div class="form-panel"><h3>Admin Demo: Add a Movie</h3><label>Movie Name</label><input id="newTitle" placeholder="Movie title"><label>Poster Image URL</label><input id="newPoster" placeholder="https://..."><label>Video File (optional)</label><input id="newVideo" type="file" accept="video/*"><button class="btn primary" onclick="addMovie()">Add Movie</button><p class="notice">This is a local demo. Uploaded files are not sent to a server and may disappear when browser data is cleared.</p></div></main></div>
+
+<div class="modal" id="movieModal" onclick="if(event.target===this)closeMovie()">
+ <div class="modal-box">
+  <div class="modal-top"><b id="modalHeading">DUBI PLAYER</b><button class="close" onclick="closeMovie()">×</button></div>
+  <div class="player"><video id="video" controls playsinline></video></div>
+  <div class="details">
+   <h2 id="movieTitle"></h2>
+   <p id="movieDescription"></p>
+   <div class="controls">
+    <select id="quality" onchange="changeQuality()">
+     <option value="auto">Quality: Auto</option>
+     <option value="720">720p (if available)</option>
+     <option value="480">480p (if available)</option>
+     <option value="360">360p (if available)</option>
+    </select>
+    <select id="audio" onchange="changeAudio()">
+     <option value="English">Audio: English (sample)</option>
+     <option value="Bangla">Bangla (when available)</option>
+     <option value="Hindi">Hindi (when available)</option>
+     <option value="Korean">Korean (when available)</option>
+    </select>
+    <select id="subtitle">
+     <option>Subtitles: Off</option>
+     <option>Bangla</option><option>English</option><option>Hindi</option>
+    </select>
+    <select id="speed" onchange="document.getElementById('video').playbackRate=this.value">
+     <option value="1">Speed: 1x</option><option value="1.25">1.25x</option><option value="1.5">1.5x</option><option value="2">2x</option>
+    </select>
+   </div>
+   <div class="controls">
+    <button class="download" onclick="downloadMovie()">⬇ Download</button>
+    <button class="small-btn" id="saveBtn" onclick="saveCurrent()">＋ My List</button>
+    <button class="small-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+   </div>
+   <p class="notice" id="playerNotice">Sample video player. Additional languages and quality options require separate media files.</p>
+  </div>
+ </div>
 </div>
-</section>
-
-<main>
-<section class="section" id="searchResults" style="display:none">
-<div class="heading"><h2>Search Results</h2></div>
-<div class="movie-row" id="searchRow"></div>
-</section>
-
-<section class="section" id="trending">
-<div class="heading"><h2>🔥 Trending Now</h2><span>Popular picks</span></div>
-<div class="movie-row" id="trendingRow"></div>
-</section>
-
-<div id="categories">
-<section class="section">
-<div class="heading"><h2>🌎 Popular Worldwide</h2></div>
-<div class="movie-row" id="worldRow"></div>
-</section>
-<section class="section">
-<div class="heading"><h2>🎬 Hollywood</h2></div>
-<div class="movie-row" id="hollywoodRow"></div>
-</section>
-<section class="section">
-<div class="heading"><h2>🇮🇳 Bollywood</h2></div>
-<div class="movie-row" id="bollywoodRow"></div>
-</section>
-<section class="section">
-<div class="heading"><h2>🇧🇩 Bangla Movies</h2></div>
-<div class="movie-row" id="banglaRow"></div>
-</section>
-<section class="section">
-<div class="heading"><h2>🇰🇷 Korean Movies</h2></div>
-<div class="movie-row" id="koreanRow"></div>
-</section>
-<section class="section" id="mylist">
-<div class="heading"><h2>＋ My List</h2><span>Your saved movies</span></div>
-<div class="movie-row" id="myListRow"></div>
-<div class="empty" id="emptyList">Your list is empty. Add movies using the + My List button.</div>
-</section>
-</div>
-<p class="notice">Demo version: movie titles and posters are sample content. No movies are streamed in this version.</p>
-</main>
 
 <footer>
-<div class="logo" style="font-size:22px">DUBI.</div>
-<p>One Movie. Every Language.</p>
-<p>© 2026 DUBI. A multilingual movie experience.</p>
+ <div class="logo">DU<span>BI</span></div>
+ <p>One Movie. Every Language.</p>
+ <p>© 2026 DUBI. For demonstration purposes.</p>
 </footer>
 
-<div class="modal" id="movieModal" onclick="if(event.target===this)closeModal()">
-<div class="modal-box">
-<div class="modal-poster" id="modalPoster"></div>
-<div class="modal-content">
-<button class="close" onclick="closeModal()">✕</button>
-<h2 id="modalTitle">Movie Title</h2>
-<div class="meta" id="modalMeta"></div>
-<p id="modalDescription"></p>
-<div class="buttons">
-<button class="btn primary" onclick="demoPlay()">▶ Play</button>
-<button class="btn secondary" id="modalSave" onclick="toggleModalSave()">＋ My List</button>
-</div>
-<p class="notice" id="modalNotice">Video playback will be added in a future version.</p>
-</div>
-</div>
+<div class="mobile-nav">
+ <button onclick="showPage('home')">⌂<br>Home</button>
+ <button onclick="showPage('movies')">▣<br>Movies</button>
+ <button onclick="showPage('downloads')">⬇<br>Downloads</button>
+ <button onclick="showPage('mylist')">♡<br>My List</button>
+ <button onclick="showPage('profile')">●<br>Profile</button>
 </div>
 
 <script>
-const movies=[
-{id:1,title:"The Last Journey",year:"2025",genre:"Adventure",rating:"8.8",category:"Hollywood",image:"photo-1440404653325-ab127d49abc1",description:"An unforgettable journey through a mysterious world."},
-{id:2,title:"Beyond the Stars",year:"2025",genre:"Sci-Fi",rating:"9.0",category:"Hollywood",image:"photo-1518709268805-4e9042af9f23",description:"A thrilling adventure beyond imagination."},
-{id:3,title:"Shadow City",year:"2024",genre:"Action",rating:"8.5",category:"Hollywood",image:"photo-1519608487953-e999c86e7455",description:"One city. One secret. One final mission."},
-{id:4,title:"The Royal Secret",year:"2025",genre:"Drama",rating:"8.7",category:"Bollywood",image:"photo-1518837695005-2083093ee35b",description:"A powerful story of love, family and destiny."},
-{id:5,title:"Love Again",year:"2024",genre:"Romance",rating:"8.2",category:"Bollywood",image:"photo-1470252649378-9c29740c9fa8",description:"Two hearts meet when they least expect it."},
-{id:6,title:"The Silent Night",year:"2025",genre:"Thriller",rating:"8.9",category:"Korean",image:"photo-1470770841072-f978cf4d019e",description:"A mysterious night changes everything."},
-{id:7,title:"Dream of Dhaka",year:"2025",genre:"Drama",rating:"8.4",category:"Bangla",image:"photo-1518005020951-eccb494ad742",description:"A story of dreams, friendship and life in the city."},
-{id:8,title:"The Lost Kingdom",year:"2024",genre:"Fantasy",rating:"8.6",category:"Korean",image:"photo-1500530855697-b586d89ba3ee",description:"An ancient kingdom hides a forgotten truth."},
-{id:9,title:"Dark Horizon",year:"2025",genre:"Horror",rating:"8.3",category:"Hollywood",image:"photo-1500534623283-312aade485b7",description:"Something is waiting beyond the darkness."},
-{id:10,title:"Moner Thikana",year:"2024",genre:"Romance",rating:"8.1",category:"Bangla",image:"photo-1470071459604-3b5ec3a7fe05",description:"A heartfelt story about finding a place to belong."},
-{id:11,title:"The Great Escape",year:"2025",genre:"Action",rating:"8.7",category:"Bollywood",image:"photo-1500534314209-a25ddb2bd429",description:"A race against time with everything at stake."},
-{id:12,title:"Winter Memories",year:"2024",genre:"Drama",rating:"8.5",category:"Korean",image:"photo-1483347756197-71ef80e95f73",description:"A beautiful story of memories and second chances."}
+const sampleVideo="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
+
+let movies=[
+ {id:1,title:"The Cinematic World",genre:"Featured",year:"2026",poster:"https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=500",description:"Explore a world of cinema with DUBI. This is a sample title for the platform preview.",video:sampleVideo},
+ {id:2,title:"Action Universe",genre:"Action",year:"2025",poster:"https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500",description:"An action movie collection preview.",video:sampleVideo},
+ {id:3,title:"Mystery Night",genre:"Thriller",year:"2025",poster:"https://images.unsplash.com/photo-1509248961158-e54f6934749c?w=500",description:"A mysterious night begins.",video:sampleVideo},
+ {id:4,title:"Beyond The Stars",genre:"Adventure",year:"2024",poster:"https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=500",description:"An adventure beyond imagination.",video:sampleVideo},
+ {id:5,title:"The Last Journey",genre:"Drama",year:"2024",poster:"https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=500",description:"A journey through unforgettable moments.",video:sampleVideo},
+ {id:6,title:"Dark City",genre:"Horror",year:"2025",poster:"https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500",description:"A dark city hides a secret.",video:sampleVideo},
+ {id:7,title:"Love Story",genre:"Romance",year:"2024",poster:"https://images.unsplash.com/photo-1511895426328-dc8714191300?w=500",description:"A story about love and life.",video:sampleVideo},
+ {id:8,title:"The Unknown",genre:"Mystery",year:"2025",poster:"https://images.unsplash.com/photo-1485846234645-a62644f84728?w=500",description:"Nothing is what it seems.",video:sampleVideo},
+ {id:9,title:"World Cinema",genre:"International",year:"2026",poster:"https://images.unsplash.com/photo-1505685296765-3a2736de412f?w=500",description:"Cinema from around the world.",video:sampleVideo}
 ];
 
+let currentMovie=null;
 let saved=JSON.parse(localStorage.getItem("dubiSaved")||"[]");
-let activeMovie=null;
+let downloaded=JSON.parse(localStorage.getItem("dubiDownloads")||"[]");
+let progress=JSON.parse(localStorage.getItem("dubiProgress")||"{}");
 
-function posterUrl(movie){
-return "https://images.unsplash.com/"+movie.image+"?auto=format&fit=crop&w=500&q=80";
+function card(m){
+ return `<div class="movie" onclick="openMovie(${m.id})">
+ <div class="poster"><img src="${m.poster}" alt="${m.title}" loading="lazy"><span class="play-icon">▶</span></div>
+ <h3>${m.title}</h3><small>${m.genre} • ${m.year}</small></div>`;
 }
-function card(movie){
-let yes=saved.includes(movie.id);
-return `<article class="movie">
-<div class="poster" style="background-image:url('${posterUrl(movie)}')" onclick="openMovie(${movie.id})">
-<span class="rating">★ ${movie.rating}</span></div>
-<div class="movie-title">${movie.title}</div>
-<div class="meta">${movie.year} • ${movie.genre}</div>
-<div class="movie-actions">
-<button class="small" onclick="openMovie(${movie.id})">Details</button>
-<button class="small ${yes?'saved':''}" onclick="toggleSave(${movie.id})">${yes?'✓ Saved':'+ My List'}</button>
-</div></article>`;
+function section(title,list){
+ return `<section class="section"><div class="section-head"><h2>${title}</h2><small>${list.length} titles</small></div><div class="movie-row">${list.map(card).join("")}</div></section>`;
 }
-function renderRow(id,list){
-document.getElementById(id).innerHTML=list.length?list.map(card).join(""):"";
+function render(){
+ document.getElementById("homeRows").innerHTML=
+ section("🔥 Trending Now",movies.slice(0,5))+
+ section("🌍 Popular Worldwide",movies.slice(2,8))+
+ section("🎬 Action & Adventure",movies.filter(m=>["Action","Adventure"].includes(m.genre)))+
+ section("👻 Thriller & Horror",movies.filter(m=>["Thriller","Horror","Mystery"].includes(m.genre)))+
+ section("❤️ Drama & Romance",movies.filter(m=>["Drama","Romance"].includes(m.genre)));
+ document.getElementById("allMovies").innerHTML=`<div class="movie-row" style="flex-wrap:wrap">${movies.map(card).join("")}</div>`;
+ renderSaved();
 }
-function renderAll(){
-renderRow("trendingRow",movies.slice(0,6));
-renderRow("worldRow",[...movies].sort((a,b)=>Number(b.rating)-Number(a.rating)).slice(0,8));
-renderRow("hollywoodRow",movies.filter(m=>m.category==="Hollywood"));
-renderRow("bollywoodRow",movies.filter(m=>m.category==="Bollywood"));
-renderRow("banglaRow",movies.filter(m=>m.category==="Bangla"));
-renderRow("koreanRow",movies.filter(m=>m.category==="Korean"));
-let list=movies.filter(m=>saved.includes(m.id));
-renderRow("myListRow",list);
-document.getElementById("emptyList").style.display=list.length?"none":"block";
-}
-function toggleSave(id){
-saved=saved.includes(id)?saved.filter(x=>x!==id):[...saved,id];
-localStorage.setItem("dubiSaved",JSON.stringify(saved));
-renderAll();
-if(activeMovie&&activeMovie.id===id)updateModalSave();
+function showPage(id){
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ window.scrollTo(0,0);
+ if(id==="mylist")renderSaved();
+ if(id==="downloads")renderDownloads();
 }
 function openMovie(id){
-activeMovie=movies.find(m=>m.id===id);
-document.getElementById("modalPoster").style.backgroundImage=`url('${posterUrl(activeMovie)}')`;
-document.getElementById("modalTitle").textContent=activeMovie.title;
-document.getElementById("modalMeta").textContent=`${activeMovie.year} • ${activeMovie.genre} • ★ ${activeMovie.rating}`;
-document.getElementById("modalDescription").textContent=activeMovie.description;
-document.getElementById("movieModal").classList.add("show");
-document.getElementById("modalNotice").textContent="Video playback will be added in a future version.";
-updateModalSave();
+ currentMovie=movies.find(m=>m.id===id);
+ if(!currentMovie)return;
+ const v=document.getElementById("video");
+ v.pause();v.src=currentMovie.video||sampleVideo;v.load();
+ document.getElementById("movieTitle").textContent=currentMovie.title;
+ document.getElementById("modalHeading").textContent=currentMovie.title;
+ document.getElementById("movieDescription").textContent=currentMovie.description;
+ document.getElementById("movieModal").classList.add("show");
+ document.getElementById("saveBtn").textContent=saved.includes(id)?"♥ Saved":"＋ My List";
+ document.getElementById("playerNotice").textContent="Sample player. Real movies, multiple audio tracks and quality versions must be uploaded by the administrator.";
 }
-function updateModalSave(){
-document.getElementById("modalSave").textContent=saved.includes(activeMovie.id)?"✓ Saved":"＋ My List";
+function closeMovie(){
+ const v=document.getElementById("video");
+ if(currentMovie)progress[currentMovie.id]=v.currentTime;
+ localStorage.setItem("dubiProgress",JSON.stringify(progress));
+ v.pause();
+ document.getElementById("movieModal").classList.remove("show");
 }
-function toggleModalSave(){if(activeMovie)toggleSave(activeMovie.id)}
-function closeModal(){document.getElementById("movieModal").classList.remove("show")}
-function demoPlay(){
-document.getElementById("modalNotice").textContent="This is a design demo. Real video playback and dubbed audio will come later.";
+function saveCurrent(){
+ if(!currentMovie)return;
+ if(saved.includes(currentMovie.id))saved=saved.filter(x=>x!==currentMovie.id);
+ else saved.push(currentMovie.id);
+ localStorage.setItem("dubiSaved",JSON.stringify(saved));
+ document.getElementById("saveBtn").textContent=saved.includes(currentMovie.id)?"♥ Saved":"＋ My List";
+}
+function renderSaved(){
+ const list=movies.filter(m=>saved.includes(m.id));
+ document.getElementById("savedMovies").innerHTML=list.length?`<div class="movie-row" style="flex-wrap:wrap">${list.map(card).join("")}</div>`:'<p class="empty">Your list is empty. Add movies you like.</p>';
+}
+function downloadMovie(){
+ if(!currentMovie)return;
+ const a=document.createElement("a");
+ a.href=currentMovie.video;
+ a.download=currentMovie.title.replaceAll(" ","_")+".mp4";
+ a.target="_blank";
+ document.body.appendChild(a);a.click();a.remove();
+ if(!downloaded.includes(currentMovie.id))downloaded.push(currentMovie.id);
+ localStorage.setItem("dubiDownloads",JSON.stringify(downloaded));
+ alert("Download request started. Your browser may open the sample video instead of saving it.");
+}
+function renderDownloads(){
+ const list=movies.filter(m=>downloaded.includes(m.id));
+ document.getElementById("downloadMovies").innerHTML=list.length?`<div class="movie-row" style="flex-wrap:wrap">${list.map(card).join("")}</div>`:'<p class="empty">No download records yet.</p>';
+}
+function changeQuality(){
+ const q=document.getElementById("quality").value;
+ document.getElementById("playerNotice").textContent=q==="auto"?"Automatic quality selected.":"Selected "+q+"p. This sample has no separate quality files, so actual resolution will not change.";
+}
+function changeAudio(){
+ const a=document.getElementById("audio").value;
+ document.getElementById("playerNotice").textContent=a==="English"?"Sample English audio selected.":a+" audio is not available in this sample. Admin must add the dubbed audio track.";
+}
+function toggleFullscreen(){
+ const v=document.getElementById("video");
+ if(v.requestFullscreen)v.requestFullscreen();
+ else if(v.webkitEnterFullscreen)v.webkitEnterFullscreen();
 }
 function searchMovies(){
-let q=document.getElementById("search").value.trim().toLowerCase();
-document.getElementById("searchResults").style.display=q?"block":"none";
-if(q){
-let result=movies.filter(m=>(m.title+" "+m.genre+" "+m.category).toLowerCase().includes(q));
-renderRow("searchRow",result);
-if(!result.length)document.getElementById("searchRow").innerHTML='<p class="empty">No movies found.</p>';
+ const q=document.getElementById("search").value.toLowerCase();
+ const found=movies.filter(m=>(m.title+" "+m.genre).toLowerCase().includes(q));
+ showPage("movies");
+ document.getElementById("allMovies").innerHTML=found.length?`<div class="movie-row" style="flex-wrap:wrap">${found.map(card).join("")}</div>`:'<p class="empty">No movies found.</p>';
 }
+function addMovie(){
+ const title=document.getElementById("newTitle").value.trim();
+ const poster=document.getElementById("newPoster").value.trim();
+ const file=document.getElementById("newVideo").files[0];
+ if(!title||!poster){alert("Enter movie title and poster URL.");return;}
+ let video=sampleVideo;
+ if(file)video=URL.createObjectURL(file);
+ movies.unshift({id:Date.now(),title,genre:"New",year:"2026",poster,description:"Added from local admin demo.",video});
+ render();alert("Movie added to this browser preview.");
 }
-function changeLanguage(){
-alert("Selected language: "+document.getElementById("language").value+"\nAudio dubbing will be added in a future version.");
-}
-function home(){window.scrollTo({top:0,behavior:"smooth"})}
-renderAll();
+render();
 </script>
 </body>
 </html>
