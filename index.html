@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,287 +6,499 @@
 <meta name="theme-color" content="#08090e">
 <title>DUBI - One Movie. Every Language.</title>
 <style>
-:root{--bg:#08090e;--panel:#151720;--red:#e50925;--muted:#a5a7b1;--white:#fff}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:white;font-family:Arial, sans-serif}
-button,input,select{font:inherit}
-button{cursor:pointer}
+:root{--bg:#08090e;--panel:#151720;--red:#e50925;--muted:#a5a7b1}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#fff;font-family:Arial,sans-serif}
+button,input,select{font:inherit}button{cursor:pointer}
 header{height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 5%;background:#090a0fee;position:sticky;top:0;z-index:10;border-bottom:1px solid #ffffff12}
-.logo{font-size:27px;font-weight:900;color:#f21d3c;letter-spacing:2px}
-.logo span{color:white}
-nav{display:flex;gap:23px;align-items:center}
-nav a{color:#ddd;text-decoration:none;font-size:14px;cursor:pointer}
-nav a:hover{color:#f21d3c}
-.header-right{display:flex;gap:10px;align-items:center}
-.search{background:#191b25;border:1px solid #333644;border-radius:22px;padding:10px 14px;color:white;width:170px;outline:none}
+.logo{font-size:27px;font-weight:900;color:#f21d3c;letter-spacing:2px}.logo span{color:white}
+nav{display:flex;gap:23px;align-items:center}nav a{color:#ddd;text-decoration:none;font-size:14px;cursor:pointer}
+.header-right{display:flex;gap:10px;align-items:center}.search{background:#191b25;border:1px solid #333644;border-radius:22px;padding:10px 14px;color:white;width:170px;outline:none}
 .profile{background:#292c39;border:0;color:white;border-radius:50%;width:36px;height:36px}
 .hero{min-height:470px;padding:75px 6%;display:flex;align-items:center;background:linear-gradient(90deg,#08090e 5%,#08090ecc 48%,#08090e22),linear-gradient(0deg,#08090e,transparent 45%),url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1600') center/cover}
-.hero-content{max-width:560px}
-.tag{color:#ff536a;font-size:12px;font-weight:bold;letter-spacing:3px}
-.hero h1{font-size:clamp(38px,6vw,68px);margin:13px 0}
-.hero p{color:#d0d0d0;line-height:1.7}
-.meta{color:#bbb;font-size:13px;margin:12px 0 22px}
-.btn{border:0;border-radius:5px;padding:12px 20px;font-weight:bold;margin-right:8px}
-.primary{background:var(--red);color:white}
-.secondary{background:#ffffff22;color:white;border:1px solid #ffffff55}
-main{padding:10px 5% 60px}
-.section{margin:28px 0 36px}
-.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
-.section h2{font-size:21px;margin:0}
-.section-head small{color:var(--muted)}
+.hero-content{max-width:560px}.tag{color:#ff536a;font-size:12px;font-weight:bold;letter-spacing:3px}
+.hero h1{font-size:clamp(38px,6vw,68px);margin:13px 0}.hero p{color:#d0d0d0;line-height:1.7}
+.meta{color:#bbb;font-size:13px;margin:12px 0 22px}.btn{border:0;border-radius:5px;padding:12px 20px;font-weight:bold;margin:5px 8px 5px 0}
+.primary{background:var(--red);color:white}.secondary{background:#ffffff22;color:white;border:1px solid #ffffff55}
+main{padding:10px 5% 60px}.section{margin:28px 0 36px}.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.section h2{font-size:21px;margin:0}.section-head small{color:var(--muted)}
 .movie-row{display:flex;gap:15px;overflow-x:auto;padding:3px 2px 14px;scrollbar-width:thin}
-.movie{flex:0 0 155px;cursor:pointer;transition:.2s}
-.movie:hover{transform:scale(1.045)}
-.poster{height:220px;border-radius:8px;overflow:hidden;background:#20232e;position:relative}
-.poster img{width:100%;height:100%;object-fit:cover}
+.movie{flex:0 0 155px;cursor:pointer;transition:.2s}.movie:hover{transform:scale(1.045)}
+.poster{height:220px;border-radius:8px;overflow:hidden;background:#20232e;position:relative}.poster img{width:100%;height:100%;object-fit:cover}
 .poster .play-icon{position:absolute;bottom:9px;right:9px;background:#e50925;border-radius:50%;width:33px;height:33px;display:grid;place-items:center}
-.movie h3{font-size:14px;margin:9px 0 4px}
-.movie small{color:#999}
-.empty{color:#999;padding:20px}
+.movie h3{font-size:14px;margin:9px 0 4px}.movie small{color:#999}.empty{color:#999;padding:20px}
 footer{border-top:1px solid #242630;padding:30px 5%;color:#888;text-align:center;font-size:13px}
-.modal{display:none;position:fixed;inset:0;background:#000d;z-index:30;overflow:auto;padding:20px}
-.modal.show{display:block}
+.modal{display:none;position:fixed;inset:0;background:#000d;z-index:30;overflow:auto;padding:20px}.modal.show{display:block}
 .modal-box{background:#12141d;max-width:850px;margin:20px auto;border:1px solid #343744;border-radius:12px;overflow:hidden}
-.modal-top{display:flex;justify-content:space-between;padding:15px 20px;align-items:center}
-.close{background:#292c38;color:white;border:0;border-radius:50%;width:35px;height:35px;font-size:20px}
-.player{background:#000}
-video{width:100%;max-height:480px;display:block}
-.details{padding:20px}
-.details h2{margin-top:0}
-.details p{color:#bbb;line-height:1.6}
-.controls{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}
-.controls select{background:#242735;color:white;border:1px solid #45495b;padding:10px;border-radius:5px}
+.modal-top{display:flex;justify-content:space-between;padding:15px 20px;align-items:center}.close{background:#292c38;color:white;border:0;border-radius:50%;width:35px;height:35px;font-size:20px}
+.player{background:#000}video{width:100%;max-height:480px;display:block}.details{padding:20px}.details h2{margin-top:0}.details p{color:#bbb;line-height:1.6}
+.controls{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}.controls select{background:#242735;color:white;border:1px solid #45495b;padding:10px;border-radius:5px}
 .download{background:#e50925;color:white;border:0;border-radius:5px;padding:12px 18px;font-weight:bold}
 .small-btn{background:#292d3b;color:white;border:1px solid #45495b;padding:10px 15px;border-radius:5px}
-.notice{font-size:12px;color:#999;margin-top:12px}
-.page{display:none}
-.page.active{display:block}
+.notice{font-size:12px;color:#999;margin-top:12px}.page{display:none}.page.active{display:block}
 .form-panel{background:#151720;border:1px solid #303342;border-radius:10px;padding:20px;max-width:600px;margin:25px auto}
 .form-panel input,.form-panel select{width:100%;padding:12px;margin:8px 0 16px;background:#252836;color:white;border:1px solid #414556;border-radius:5px}
-.mobile-nav{display:none}
-@media(max-width:700px){
- header{padding:0 4%;height:60px}
- nav{display:none}
- .search{width:115px}
- .hero{min-height:390px;padding:45px 5%}
- main{padding:8px 4% 45px}
- .movie{flex-basis:125px}
- .poster{height:180px}
- .mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:#11131c;border-top:1px solid #333;padding:12px 5%;justify-content:space-around;z-index:15}
- .mobile-nav button{background:none;color:#ddd;border:0;font-size:12px}
- footer{padding-bottom:80px}
-}
+.mobile-nav{display:none}.status{font-size:13px;color:#b8bbc7;line-height:1.5;overflow-wrap:anywhere}
+@media(max-width:700px){header{padding:0 4%;height:60px}nav{display:none}.search{width:115px}.hero{min-height:390px;padding:45px 5%}main{padding:8px 4% 45px}.movie{flex-basis:125px}.poster{height:180px}.mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:#11131c;border-top:1px solid #333;padding:12px 5%;justify-content:space-around;z-index:15}.mobile-nav button{background:none;color:#ddd;border:0;font-size:12px}footer{padding-bottom:80px}}
 </style>
 </head>
 <body>
-
 <header>
  <div class="logo">DU<span>BI</span></div>
- <nav>
-  <a onclick="showPage('home')">Home</a>
-  <a onclick="showPage('movies')">Movies</a>
-  <a onclick="showPage('series')">Series</a>
-  <a onclick="showPage('downloads')">Downloads</a>
-  <a onclick="showPage('mylist')">My List</a>
- </nav>
- <div class="header-right">
-  <input class="search" id="search" placeholder="Search..." oninput="searchMovies()">
-  <button class="profile" onclick="showPage('profile')">👤</button>
- </div>
+ <nav><a onclick="showPage('home')">Home</a><a onclick="showPage('movies')">Movies</a><a onclick="showPage('series')">Series</a><a onclick="showPage('downloads')">Downloads</a><a onclick="showPage('mylist')">My List</a></nav>
+ <div class="header-right"><input class="search" id="search" placeholder="Search..." oninput="searchMovies()"><button class="profile" onclick="showPage('profile')">👤</button></div>
 </header>
-
 <div id="home" class="page active">
- <section class="hero">
-  <div class="hero-content">
-   <div class="tag">WELCOME TO DUBI</div>
-   <h1>ONE MOVIE.<br>EVERY LANGUAGE.</h1>
-   <p>Discover movies from around the world. Watch, explore and enjoy entertainment in your preferred language.</p>
-   <div class="meta">✦ Global Cinema &nbsp; • &nbsp; Multiple Languages</div>
-   <button class="btn primary" onclick="openMovie(1)">▶ Explore Now</button>
-   <button class="btn secondary" onclick="showPage('movies')">Browse Movies</button>
-  </div>
- </section>
+ <section class="hero"><div class="hero-content"><div class="tag">WELCOME TO DUBI</div><h1>ONE MOVIE.<br>EVERY LANGUAGE.</h1><p>Discover movies from around the world. Watch, explore and enjoy entertainment in your preferred language.</p><div class="meta">✦ Global Cinema &nbsp; • &nbsp; Multiple Languages</div><button class="btn primary" onclick="openMovie(1)">▶ Explore Now</button><button class="btn secondary" onclick="showPage('movies')">Browse Movies</button></div></section>
  <main id="homeRows"></main>
 </div>
-
 <div id="movies" class="page"><main><h2>Explore Movies</h2><div id="allMovies"></div></main></div>
 <div id="series" class="page"><main><h2>Series</h2><p class="empty">Series library is coming soon.</p></main></div>
 <div id="mylist" class="page"><main><h2>My List ❤️</h2><div id="savedMovies"></div></main></div>
-<div id="downloads" class="page"><main><h2>My Downloads ⬇</h2><div id="downloadMovies"></div><p class="notice">Downloads are stored by your browser. Actual offline movie downloads need compatible video files and storage support.</p></main></div>
-<div id="profile" class="page"><main><h2>My Profile</h2><div class="form-panel"><h3>Welcome to DUBI</h3><p>Your personal movie space.</p><label>Preferred Language</label><select id="profileLang"><option>Bangla</option><option>English</option><option>Hindi</option><option>Arabic</option><option>Korean</option></select><button class="btn primary" onclick="alert('Preference saved on this device!')">Save Preference</button></div><div class="form-panel"><h3>Admin Demo: Add a Movie</h3><label>Movie Name</label><input id="newTitle" placeholder="Movie title"><label>Poster Image URL</label><input id="newPoster" placeholder="https://..."><label>Video File (optional)</label><input id="newVideo" type="file" accept="video/*"><button class="btn primary" onclick="addMovie()">Add Movie</button><p class="notice">This is a local demo. Uploaded files are not sent to a server and may disappear when browser data is cleared.</p></div></main></div>
-
-<div class="modal" id="movieModal" onclick="if(event.target===this)closeMovie()">
- <div class="modal-box">
-  <div class="modal-top"><b id="modalHeading">DUBI PLAYER</b><button class="close" onclick="closeMovie()">×</button></div>
-  <div class="player"><video id="video" controls playsinline></video></div>
-  <div class="details">
-   <h2 id="movieTitle"></h2>
-   <p id="movieDescription"></p>
-   <div class="controls">
-    <select id="quality" onchange="changeQuality()">
-     <option value="auto">Quality: Auto</option>
-     <option value="720">720p (if available)</option>
-     <option value="480">480p (if available)</option>
-     <option value="360">360p (if available)</option>
-    </select>
-    <select id="audio" onchange="changeAudio()">
-     <option value="English">Audio: English (sample)</option>
-     <option value="Bangla">Bangla (when available)</option>
-     <option value="Hindi">Hindi (when available)</option>
-     <option value="Korean">Korean (when available)</option>
-    </select>
-    <select id="subtitle">
-     <option>Subtitles: Off</option>
-     <option>Bangla</option><option>English</option><option>Hindi</option>
-    </select>
-    <select id="speed" onchange="document.getElementById('video').playbackRate=this.value">
-     <option value="1">Speed: 1x</option><option value="1.25">1.25x</option><option value="1.5">1.5x</option><option value="2">2x</option>
-    </select>
-   </div>
-   <div class="controls">
-    <button class="download" onclick="downloadMovie()">⬇ Download</button>
-    <button class="small-btn" id="saveBtn" onclick="saveCurrent()">＋ My List</button>
-    <button class="small-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
-   </div>
-   <p class="notice" id="playerNotice">Sample video player. Additional languages and quality options require separate media files.</p>
-  </div>
- </div>
-</div>
-
-<footer>
- <div class="logo">DU<span>BI</span></div>
- <p>One Movie. Every Language.</p>
- <p>© 2026 DUBI. For demonstration purposes.</p>
-</footer>
-
-<div class="mobile-nav">
- <button onclick="showPage('home')">⌂<br>Home</button>
- <button onclick="showPage('movies')">▣<br>Movies</button>
- <button onclick="showPage('downloads')">⬇<br>Downloads</button>
- <button onclick="showPage('mylist')">♡<br>My List</button>
- <button onclick="showPage('profile')">●<br>Profile</button>
-</div>
-
+<div id="downloads" class="page"><main><h2>My Downloads ⬇</h2><div id="downloadMovies"></div><p class="notice">This page records download requests. Real offline downloads require downloadable, licensed video files.</p></main></div>
+<div id="profile" class="page"><main><h2>My Profile</h2>
+ <div class="form-panel"><h3 id="authHeading">Sign in to DUBI</h3><p id="authStatus" class="status">Create an account or sign in to sync your profile and watchlist.</p>
+ <label>Email address</label><input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com">
+ <label>Password</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="At least 6 characters">
+ <button class="btn primary" onclick="signIn()">Log In</button><button class="btn secondary" onclick="signUp()">Create Account</button><button class="small-btn" onclick="signOut()">Log Out</button>
+ <p class="notice">If email confirmation is enabled, check your inbox after registration. Use your own email address.</p></div>
+ <div class="form-panel"><h3>Account details</h3><p id="accountInfo" class="status">Not signed in.</p><label>Preferred Language</label><select id="profileLang"><option>Bangla</option><option>English</option><option>Hindi</option><option>Arabic</option><option>Korean</option></select><button class="btn primary" onclick="savePreference()">Save Preference</button></div>
+ <div class="form-panel"><h3>Admin Demo: Add a Movie</h3><label>Movie Name</label><input id="newTitle" placeholder="Movie title"><label>Poster Image URL</label><input id="newPoster" placeholder="https://..."><label>Video URL</label><input id="newVideo" placeholder="Licensed video URL"><button class="btn primary" onclick="addMovie()">Add Movie</button><p class="notice">This form is a local preview only. Database movie publishing and secure admin permissions will be added separately.</p></div>
+ </main></div>
+<div class="modal" id="movieModal" onclick="if(event.target===this)closeMovie()"><div class="modal-box">
+ <div class="modal-top"><b id="modalHeading">DUBI PLAYER</b><button class="close" onclick="closeMovie()">×</button></div>
+ <div class="player"><video id="video" controls playsinline></video></div>
+ <div class="details"><h2 id="movieTitle"></h2><p id="movieDescription"></p>
+ <div class="controls"><select id="quality" onchange="changeQuality()"><option value="auto">Quality: Auto</option><option value="720">720p (if available)</option><option value="480">480p (if available)</option><option value="360">360p (if available)</option></select>
+ <select id="audio" onchange="changeAudio()"><option value="English">Audio: English (sample)</option><option value="Bangla">Bangla (when available)</option><option value="Hindi">Hindi (when available)</option><option value="Korean">Korean (when available)</option></select>
+ <select id="speed" onchange="document.getElementById('video').playbackRate=this.value"><option value="1">Speed: 1x</option><option value="1.25">1.25x</option><option value="1.5">1.5x</option><option value="2">2x</option></select></div>
+ <div class="controls"><button class="download" onclick="downloadMovie()">⬇ Download</button><button class="small-btn" id="saveBtn" onclick="saveCurrent()">＋ My List</button><button class="small-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button></div>
+ <p class="notice" id="playerNotice">Sample player. Real media files and audio tracks must be supplied with distribution rights.</p></div>
+</div></div>
+<footer><div class="logo">DU<span>BI</span></div><p>One Movie. Every Language.</p><p>© 2026 DUBI. For demonstration purposes.</p></footer>
+<div class="mobile-nav"><button onclick="showPage('home')">⌂<br>Home</button><button onclick="showPage('movies')">▣<br>Movies</button><button onclick="showPage('downloads')">⬇<br>Downloads</button><button onclick="showPage('mylist')">♡<br>My List</button><button onclick="showPage('profile')">●<br>Profile</button></div>
+<!-- Supabase browser client -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const sampleVideo="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
+const SUPABASE_URL = "https://cfowzxqtlcdvlbqkxkro.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_LJPCsVtB1pGW_8etqYb_dT11APDZd";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
-let movies=[
- {id:1,title:"The Cinematic World",genre:"Featured",year:"2026",poster:"https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=500",description:"Explore a world of cinema with DUBI. This is a sample title for the platform preview.",video:sampleVideo},
- {id:2,title:"Action Universe",genre:"Action",year:"2025",poster:"https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500",description:"An action movie collection preview.",video:sampleVideo},
- {id:3,title:"Mystery Night",genre:"Thriller",year:"2025",poster:"https://images.unsplash.com/photo-1509248961158-e54f6934749c?w=500",description:"A mysterious night begins.",video:sampleVideo},
- {id:4,title:"Beyond The Stars",genre:"Adventure",year:"2024",poster:"https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=500",description:"An adventure beyond imagination.",video:sampleVideo},
- {id:5,title:"The Last Journey",genre:"Drama",year:"2024",poster:"https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=500",description:"A journey through unforgettable moments.",video:sampleVideo},
- {id:6,title:"Dark City",genre:"Horror",year:"2025",poster:"https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500",description:"A dark city hides a secret.",video:sampleVideo},
- {id:7,title:"Love Story",genre:"Romance",year:"2024",poster:"https://images.unsplash.com/photo-1511895426328-dc8714191300?w=500",description:"A story about love and life.",video:sampleVideo},
- {id:8,title:"The Unknown",genre:"Mystery",year:"2025",poster:"https://images.unsplash.com/photo-1485846234645-a62644f84728?w=500",description:"Nothing is what it seems.",video:sampleVideo},
- {id:9,title:"World Cinema",genre:"International",year:"2026",poster:"https://images.unsplash.com/photo-1505685296765-3a2736de412f?w=500",description:"Cinema from around the world.",video:sampleVideo}
+const sampleVideo = "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
+
+let movies = [
+{id:1,title:"The Cinematic World",genre:"Featured",year:"2026",poster:"https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=500",description:"Explore a world of cinema with DUBI. This is a sample title for the platform preview.",video:sampleVideo},
+{id:2,title:"Action Universe",genre:"Action",year:"2025",poster:"https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500",description:"An action movie collection preview.",video:sampleVideo},
+{id:3,title:"Mystery Night",genre:"Thriller",year:"2025",poster:"https://images.unsplash.com/photo-1509248961158-e54f6934749c?w=500",description:"A mysterious night begins.",video:sampleVideo},
+{id:4,title:"Beyond The Stars",genre:"Adventure",year:"2024",poster:"https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=500",description:"An adventure beyond imagination.",video:sampleVideo},
+{id:5,title:"The Last Journey",genre:"Drama",year:"2024",poster:"https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=500",description:"A journey through unforgettable moments.",video:sampleVideo},
+{id:6,title:"Dark City",genre:"Horror",year:"2025",poster:"https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500",description:"A dark city hides a secret.",video:sampleVideo},
+{id:7,title:"Love Story",genre:"Romance",year:"2024",poster:"https://images.unsplash.com/photo-1511895426328-dc8714191300?w=500",description:"A story about love and life.",video:sampleVideo},
+{id:8,title:"The Unknown",genre:"Mystery",year:"2025",poster:"https://images.unsplash.com/photo-1485846234645-a62644f84728?w=500",description:"Nothing is what it seems.",video:sampleVideo},
+{id:9,title:"World Cinema",genre:"International",year:"2026",poster:"https://images.unsplash.com/photo-1505685296765-3a2736de412f?w=500",description:"Cinema from around the world.",video:sampleVideo}
 ];
 
-let currentMovie=null;
-let saved=JSON.parse(localStorage.getItem("dubiSaved")||"[]");
-let downloaded=JSON.parse(localStorage.getItem("dubiDownloads")||"[]");
-let progress=JSON.parse(localStorage.getItem("dubiProgress")||"{}");
+let currentMovie = null;
+let currentUser = null;
+let saved = JSON.parse(localStorage.getItem("dubiSaved") || "[]");
+let downloaded = JSON.parse(localStorage.getItem("dubiDownloads") || "[]");
+let progress = JSON.parse(localStorage.getItem("dubiProgress") || "{}");
 
-function card(m){
+function card(m) {
  return `<div class="movie" onclick="openMovie(${m.id})">
- <div class="poster"><img src="${m.poster}" alt="${m.title}" loading="lazy"><span class="play-icon">▶</span></div>
- <h3>${m.title}</h3><small>${m.genre} • ${m.year}</small></div>`;
+ <div class="poster">
+ <img src="${m.poster || ''}" alt="${escapeHtml(m.title)}" loading="lazy">
+ <span class="play-icon">▶</span>
+ </div>
+ <h3>${escapeHtml(m.title)}</h3>
+ <small>${escapeHtml(m.genre || '')} • ${escapeHtml(String(m.year || ''))}</small>
+ </div>`;
 }
-function section(title,list){
- return `<section class="section"><div class="section-head"><h2>${title}</h2><small>${list.length} titles</small></div><div class="movie-row">${list.map(card).join("")}</div></section>`;
+
+function escapeHtml(s) {
+ return String(s ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
-function render(){
- document.getElementById("homeRows").innerHTML=
- section("🔥 Trending Now",movies.slice(0,5))+
- section("🌍 Popular Worldwide",movies.slice(2,8))+
- section("🎬 Action & Adventure",movies.filter(m=>["Action","Adventure"].includes(m.genre)))+
- section("👻 Thriller & Horror",movies.filter(m=>["Thriller","Horror","Mystery"].includes(m.genre)))+
+
+function section(title,list) {
+ return `<section class="section">
+ <div class="section-head"><h2>${title}</h2><small>${list.length} titles</small></div>
+ <div class="movie-row">${list.map(card).join("")}</div>
+ </section>`;
+}
+
+function render() {
+ document.getElementById("homeRows").innerHTML =
+ section("🔥 Trending Now",movies.slice(0,5)) +
+ section("🌍 Popular Worldwide",movies.slice(2,8)) +
+ section("🎬 Action & Adventure",movies.filter(m=>["Action","Adventure"].includes(m.genre))) +
+ section("👻 Thriller & Horror",movies.filter(m=>["Thriller","Horror","Mystery"].includes(m.genre))) +
  section("❤️ Drama & Romance",movies.filter(m=>["Drama","Romance"].includes(m.genre)));
- document.getElementById("allMovies").innerHTML=`<div class="movie-row" style="flex-wrap:wrap">${movies.map(card).join("")}</div>`;
+
+ document.getElementById("allMovies").innerHTML =
+ `<div class="movie-row" style="flex-wrap:wrap">${movies.map(card).join("")}</div>`;
+
  renderSaved();
 }
-function showPage(id){
+
+function showPage(id) {
  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
  document.getElementById(id).classList.add("active");
  window.scrollTo(0,0);
- if(id==="mylist")renderSaved();
- if(id==="downloads")renderDownloads();
+
+ if(id==="mylist") renderSaved();
+ if(id==="downloads") renderDownloads();
+ if(id==="profile") updateAuthUI();
 }
-function openMovie(id){
- currentMovie=movies.find(m=>m.id===id);
- if(!currentMovie)return;
+
+async function loadDatabaseMovies() {
+ const {data,error} = await supabaseClient
+ .from("movies")
+ .select("*")
+ .eq("is_published",true)
+ .order("created_at",{ascending:false});
+
+ if(error) {
+  console.warn("Could not load database movies:",error.message);
+  return;
+ }
+
+ if(data && data.length) {
+  movies = data.map(m=>({
+   id:m.id,
+   dbBacked:true,
+   title:m.title,
+   genre:m.genre || "Uncategorized",
+   year:m.release_year || "",
+   poster:m.poster_url || "",
+   description:m.description || "",
+   video:sampleVideo
+  }));
+  render();
+ }
+}
+
+async function signUp() {
+ const email=document.getElementById("authEmail").value.trim();
+ const password=document.getElementById("authPassword").value;
+
+ if(!email || password.length<6) {
+  alert("Enter a valid email and a password with at least 6 characters.");
+  return;
+ }
+
+ const {data,error}=await supabaseClient.auth.signUp({email,password});
+
+ if(error) {
+  alert("Registration failed: "+error.message);
+  return;
+ }
+
+ if(data.session) {
+  currentUser=data.user;
+  await afterAuth();
+  alert("Account created and signed in.");
+ } else {
+  alert("Registration started. Check your email for a confirmation link, then log in.");
+ }
+}
+
+async function signIn() {
+ const email=document.getElementById("authEmail").value.trim();
+ const password=document.getElementById("authPassword").value;
+
+ if(!email || !password) {
+  alert("Enter email and password.");
+  return;
+ }
+
+ const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+
+ if(error) {
+  alert("Login failed: "+error.message);
+  return;
+ }
+
+ currentUser=data.user;
+ await afterAuth();
+ alert("You are logged in to DUBI.");
+}
+
+async function signOut() {
+ const {error}=await supabaseClient.auth.signOut();
+
+ if(error) {
+  alert(error.message);
+  return;
+ }
+
+ currentUser=null;
+ updateAuthUI();
+ alert("Logged out.");
+}
+
+async function afterAuth() {
+ updateAuthUI();
+ await loadCloudWatchlist();
+ await loadCloudHistory();
+}
+
+function updateAuthUI() {
+ const status=document.getElementById("authStatus");
+ const info=document.getElementById("accountInfo");
+
+ if(currentUser) {
+  status.textContent="Signed in successfully.";
+  info.textContent="Signed in as: "+currentUser.email;
+  document.getElementById("authHeading").textContent="Your DUBI Account";
+ } else {
+  status.textContent="Create an account or sign in to sync your profile and watchlist.";
+  info.textContent="Not signed in.";
+  document.getElementById("authHeading").textContent="Sign in to DUBI";
+ }
+}
+
+async function loadCloudWatchlist() {
+ if(!currentUser) return;
+
+ const {data,error}=await supabaseClient
+ .from("watchlist")
+ .select("movie_id")
+ .eq("user_id",currentUser.id);
+
+ if(error) {
+  console.warn("Watchlist sync:",error.message);
+  return;
+ }
+
+ saved=(data || []).map(x=>Number(x.movie_id));
+ localStorage.setItem("dubiSaved",JSON.stringify(saved));
+ renderSaved();
+}
+
+async function loadCloudHistory() {
+ if(!currentUser) return;
+
+ const {data,error}=await supabaseClient
+ .from("watch_history")
+ .select("movie_id,progress_seconds")
+ .eq("user_id",currentUser.id);
+
+ if(error) {
+  console.warn("History sync:",error.message);
+  return;
+ }
+
+ (data || []).forEach(x=>progress[x.movie_id]=x.progress_seconds);
+ localStorage.setItem("dubiProgress",JSON.stringify(progress));
+}
+
+async function saveCurrent() {
+ if(!currentMovie) return;
+
+ const id=Number(currentMovie.id);
+
+ if(saved.includes(id)) {
+  saved=saved.filter(x=>x!==id);
+
+  if(currentUser && currentMovie.dbBacked) {
+   const {error}=await supabaseClient
+    .from("watchlist")
+    .delete()
+    .eq("user_id",currentUser.id)
+    .eq("movie_id",id);
+
+   if(error) alert("Cloud list update failed: "+error.message);
+  }
+
+ } else {
+  saved.push(id);
+
+  if(currentUser && currentMovie.dbBacked) {
+   const {error}=await supabaseClient
+    .from("watchlist")
+    .upsert(
+     {user_id:currentUser.id,movie_id:id},
+     {onConflict:"user_id,movie_id"}
+    );
+
+   if(error) alert("Cloud list update failed: "+error.message);
+  }
+ }
+
+ localStorage.setItem("dubiSaved",JSON.stringify(saved));
+ document.getElementById("saveBtn").textContent=saved.includes(id)?"♥ Saved":"＋ My List";
+ renderSaved();
+}
+
+function renderSaved() {
+ const list=movies.filter(m=>saved.includes(Number(m.id)));
+
+ document.getElementById("savedMovies").innerHTML=list.length
+ ? `<div class="movie-row" style="flex-wrap:wrap">${list.map(card).join("")}</div>`
+ : '<p class="empty">Your list is empty. Add movies you like.</p>';
+}
+
+function openMovie(id) {
+ currentMovie=movies.find(m=>Number(m.id)===Number(id));
+ if(!currentMovie) return;
+
  const v=document.getElementById("video");
- v.pause();v.src=currentMovie.video||sampleVideo;v.load();
+ v.pause();
+ v.src=currentMovie.video || sampleVideo;
+ v.load();
+
  document.getElementById("movieTitle").textContent=currentMovie.title;
  document.getElementById("modalHeading").textContent=currentMovie.title;
- document.getElementById("movieDescription").textContent=currentMovie.description;
+ document.getElementById("movieDescription").textContent=currentMovie.description || "";
  document.getElementById("movieModal").classList.add("show");
- document.getElementById("saveBtn").textContent=saved.includes(id)?"♥ Saved":"＋ My List";
- document.getElementById("playerNotice").textContent="Sample player. Real movies, multiple audio tracks and quality versions must be uploaded by the administrator.";
+ document.getElementById("saveBtn").textContent=saved.includes(Number(id))?"♥ Saved":"＋ My List";
+
+ document.getElementById("playerNotice").textContent=
+ "This preview uses a sample video. Real video files and alternate audio tracks are not connected yet.";
 }
-function closeMovie(){
+
+async function closeMovie() {
  const v=document.getElementById("video");
- if(currentMovie)progress[currentMovie.id]=v.currentTime;
- localStorage.setItem("dubiProgress",JSON.stringify(progress));
+
+ if(currentMovie) {
+  progress[currentMovie.id]=Math.floor(v.currentTime);
+  localStorage.setItem("dubiProgress",JSON.stringify(progress));
+
+  if(currentUser && currentMovie.dbBacked) {
+   const {error}=await supabaseClient
+    .from("watch_history")
+    .upsert({
+     user_id:currentUser.id,
+     movie_id:Number(currentMovie.id),
+     progress_seconds:Math.floor(v.currentTime),
+     updated_at:new Date().toISOString()
+    },{onConflict:"user_id,movie_id"});
+
+   if(error) console.warn("History save:",error.message);
+  }
+ }
+
  v.pause();
  document.getElementById("movieModal").classList.remove("show");
 }
-function saveCurrent(){
- if(!currentMovie)return;
- if(saved.includes(currentMovie.id))saved=saved.filter(x=>x!==currentMovie.id);
- else saved.push(currentMovie.id);
- localStorage.setItem("dubiSaved",JSON.stringify(saved));
- document.getElementById("saveBtn").textContent=saved.includes(currentMovie.id)?"♥ Saved":"＋ My List";
-}
-function renderSaved(){
- const list=movies.filter(m=>saved.includes(m.id));
- document.getElementById("savedMovies").innerHTML=list.length?`<div class="movie-row" style="flex-wrap:wrap">${list.map(card).join("")}</div>`:'<p class="empty">Your list is empty. Add movies you like.</p>';
-}
-function downloadMovie(){
- if(!currentMovie)return;
+
+function downloadMovie() {
+ if(!currentMovie) return;
+
  const a=document.createElement("a");
- a.href=currentMovie.video;
+ a.href=currentMovie.video || sampleVideo;
  a.download=currentMovie.title.replaceAll(" ","_")+".mp4";
  a.target="_blank";
- document.body.appendChild(a);a.click();a.remove();
- if(!downloaded.includes(currentMovie.id))downloaded.push(currentMovie.id);
+ document.body.appendChild(a);
+ a.click();
+ a.remove();
+
+ if(!downloaded.includes(Number(currentMovie.id))) {
+  downloaded.push(Number(currentMovie.id));
+ }
+
  localStorage.setItem("dubiDownloads",JSON.stringify(downloaded));
- alert("Download request started. Your browser may open the sample video instead of saving it.");
+
+ alert("Download request started. Browser behavior depends on the video host. This is not yet a guaranteed offline download.");
 }
-function renderDownloads(){
- const list=movies.filter(m=>downloaded.includes(m.id));
- document.getElementById("downloadMovies").innerHTML=list.length?`<div class="movie-row" style="flex-wrap:wrap">${list.map(card).join("")}</div>`:'<p class="empty">No download records yet.</p>';
+
+function renderDownloads() {
+ const list=movies.filter(m=>downloaded.includes(Number(m.id)));
+
+ document.getElementById("downloadMovies").innerHTML=list.length
+ ? `<div class="movie-row" style="flex-wrap:wrap">${list.map(card).join("")}</div>`
+ : '<p class="empty">No download records yet.</p>';
 }
-function changeQuality(){
+
+function changeQuality() {
  const q=document.getElementById("quality").value;
- document.getElementById("playerNotice").textContent=q==="auto"?"Automatic quality selected.":"Selected "+q+"p. This sample has no separate quality files, so actual resolution will not change.";
+
+ document.getElementById("playerNotice").textContent=
+ q==="auto"
+ ? "Automatic quality selected."
+ : "Selected "+q+"p. This sample has no separate quality files, so actual resolution will not change.";
 }
-function changeAudio(){
+
+function changeAudio() {
  const a=document.getElementById("audio").value;
- document.getElementById("playerNotice").textContent=a==="English"?"Sample English audio selected.":a+" audio is not available in this sample. Admin must add the dubbed audio track.";
+
+ document.getElementById("playerNotice").textContent=
+ a==="English"
+ ? "Sample English audio selected."
+ : a+" audio is not available yet. A separate licensed audio track is required.";
 }
-function toggleFullscreen(){
+
+function toggleFullscreen() {
  const v=document.getElementById("video");
- if(v.requestFullscreen)v.requestFullscreen();
- else if(v.webkitEnterFullscreen)v.webkitEnterFullscreen();
+
+ if(v.requestFullscreen) v.requestFullscreen();
+ else if(v.webkitEnterFullscreen) v.webkitEnterFullscreen();
 }
-function searchMovies(){
+
+function searchMovies() {
  const q=document.getElementById("search").value.toLowerCase();
  const found=movies.filter(m=>(m.title+" "+m.genre).toLowerCase().includes(q));
+
  showPage("movies");
- document.getElementById("allMovies").innerHTML=found.length?`<div class="movie-row" style="flex-wrap:wrap">${found.map(card).join("")}</div>`:'<p class="empty">No movies found.</p>';
+
+ document.getElementById("allMovies").innerHTML=found.length
+ ? `<div class="movie-row" style="flex-wrap:wrap">${found.map(card).join("")}</div>`
+ : '<p class="empty">No movies found.</p>';
 }
-function addMovie(){
+
+function addMovie() {
  const title=document.getElementById("newTitle").value.trim();
  const poster=document.getElementById("newPoster").value.trim();
- const file=document.getElementById("newVideo").files[0];
- if(!title||!poster){alert("Enter movie title and poster URL.");return;}
- let video=sampleVideo;
- if(file)video=URL.createObjectURL(file);
- movies.unshift({id:Date.now(),title,genre:"New",year:"2026",poster,description:"Added from local admin demo.",video});
- render();alert("Movie added to this browser preview.");
+ const video=document.getElementById("newVideo").value.trim();
+
+ if(!title || !poster) {
+  alert("Enter movie title and poster URL.");
+  return;
+ }
+
+ movies.unshift({
+  id:Date.now(),
+  title,
+  genre:"New",
+  year:"2026",
+  poster,
+  description:"Added to this browser preview.",
+  video:video || sampleVideo
+ });
+
+ render();
+ alert("Movie added to this browser preview only. It has not been uploaded to the database.");
 }
+
+async function savePreference() {
+ if(!currentUser) {
+  alert("Log in first to save your preference to your account.");
+  return;
+ }
+
+ const lang=document.getElementById("profileLang").value;
+
+ const {error}=await supabaseClient
+  .from("profiles")
+  .upsert({id:currentUser.id,preferred_language:lang},{onConflict:"id"});
+
+ if(error) alert("Could not save preference: "+error.message);
+ else alert("Language preference saved.");
+}
+
+supabaseClient.auth.getSession().then(async({data})=>{
+ currentUser=data.session?.user || null;
+ updateAuthUI();
+ if(currentUser) await afterAuth();
+});
+
+supabaseClient.auth.onAuthStateChange((_event,session)=>{
+ currentUser=session?.user || null;
+ updateAuthUI();
+ if(currentUser) afterAuth();
+});
+
 render();
+loadDatabaseMovies();
 </script>
 </body>
 </html>
