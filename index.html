@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090b18">
+<title>DUBI - Every Language</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+ background:#090b18;color:#fff;
+ font-family:Arial,sans-serif;
+ padding-bottom:75px
+}
+header{
+ display:flex;justify-content:space-between;
+ align-items:center;padding:18px 5%;
+ background:#101326;
+ position:sticky;top:0;z-index:5
+}
+.logo{font-size:29px;font-weight:900;color:#9b7cff}
+.logo span{color:#fff}
+.profile{
+ background:#252944;border-radius:50%;
+ padding:10px;font-size:19px
+}
+.hero{
+ margin:18px 4%;padding:35px 22px;
+ min-height:240px;border-radius:18px;
+ background:linear-gradient(120deg,#40228a,#121a42 75%,#15152c);
+ display:flex;flex-direction:column;
+ justify-content:center
+}
+.hero small{color:#d5c8ff;letter-spacing:2px}
+.hero h1{font-size:34px;margin:12px 0}
+.hero p{color:#ddd;line-height:1.5}
+.btn{
+ margin-top:20px;padding:12px 22px;
+ border:0;border-radius:8px;
+ background:#9875ff;color:white;
+ font-size:15px;font-weight:bold;width:max-content
+}
+.languages{padding:15px 4%;overflow:auto;white-space:nowrap}
+.languages button{
+ background:#20243c;color:white;
+ border:1px solid #414767;
+ border-radius:20px;padding:9px 16px;
+ margin-right:8px
+}
+section{margin:22px 0}
+.heading{font-size:20px;padding:0 4%;margin-bottom:14px}
+.movies{
+ display:flex;gap:13px;overflow-x:auto;
+ padding:0 4% 12px
+}
+.movie{min-width:135px;width:135px}
+.poster{
+ height:185px;border-radius:12px;
+ display:flex;align-items:center;
+ justify-content:center;text-align:center;
+ padding:10px;font-size:19px;font-weight:bold;
+ background:linear-gradient(145deg,#593a96,#18264a)
+}
+.movie:nth-child(2) .poster{background:linear-gradient(145deg,#9a4a47,#28203e)}
+.movie:nth-child(3) .poster{background:linear-gradient(145deg,#176e75,#17223e)}
+.movie:nth-child(4) .poster{background:linear-gradient(145deg,#9c6630,#27203b)}
+.movie p{font-size:14px;margin-top:8px}
+.movie small{color:#a9a9bd;font-size:11px}
+footer{
+ position:fixed;bottom:0;left:0;right:0;
+ background:#14172a;display:flex;
+ justify-content:space-around;padding:15px 5px;
+ border-top:1px solid #292d45;z-index:10
+}
+footer span{font-size:12px;color:#c6c4d7}
+footer span:first-child{color:#a78bfa}
+</style>
+</head>
+
+<body>
+
+<header>
+ <div class="logo">DUBI<span>.</span></div>
+ <div class="profile">👤</div>
+</header>
+
+<div class="hero">
+ <small>ONE VIDEO. EVERY LANGUAGE.</small>
+ <h1>Movies Without<br>Language Limits.</h1>
+ <p>Watch your favourite videos in the language you love.</p>
+ <button class="btn" onclick="document.getElementById('trending').scrollIntoView({behavior:'smooth'})">
+  Explore Movies ▶
+ </button>
+</div>
+
+<div class="languages">
+ <button>🌐 All</button>
+ <button>বাংলা</button>
+ <button>English</button>
+ <button>हिन्दी</button>
+ <button>한국어</button>
+ <button>العربية</button>
+</div>
+
+<section id="trending">
+ <h2 class="heading">🔥 Trending Now</h2>
+ <div class="movies">
+  <div class="movie"><div class="poster">THE<br>ADVENTURE</div><p>The Adventure</p><small>Action • English</small></div>
+  <div class="movie"><div class="poster">DARK<br>WORLD</div><p>Dark World</p><small>Thriller • Hindi</small></div>
+  <div class="movie"><div class="poster">LOST<br>IN TIME</div><p>Lost in Time</p><small>Sci-Fi • English</small></div>
+  <div class="movie"><div class="poster">THE<br>SECRET</div><p>The Secret</p><small>Mystery • Korean</small></div>
+ </div>
+</section>
+
+<section>
+ <h2 class="heading">🎬 Popular Worldwide</h2>
+ <div class="movies">
+  <div class="movie"><div class="poster">BEYOND<br>THE SKY</div><p>Beyond the Sky</p><small>Adventure</small></div>
+  <div class="movie"><div class="poster">LAST<br>MISSION</div><p>Last Mission</p><small>Action</small></div>
+  <div class="movie"><div class="poster">DREAM<br>LAND</div><p>Dream Land</p><small>Fantasy</small></div>
+  <div class="movie"><div class="poster">HIDDEN<br>TRUTH</div><p>Hidden Truth</p><small>Drama</small></div>
+ </div>
+</section>
+
+<section>
+ <h2 class="heading">🇧🇩 Bangla Collection</h2>
+ <div class="movies">
+  <div class="movie"><div class="poster">BANGLA<br>STORY</div><p>Bangla Story</p><small>Drama</small></div>
+  <div class="movie"><div class="poster">NEW<br>HORIZON</div><p>New Horizon</p><small>Adventure</small></div>
+  <div class="movie"><div class="poster">THE<br>JOURNEY</div><p>The Journey</p><small>Romance</small></div>
+ </div>
+</section>
+
+<footer>
+ <span>⌂ Home</span>
+ <span>⌕ Search</span>
+ <span>🌐 Languages</span>
+ <span>♡ My List</span>
+ <span>👤 Profile</span>
+</footer>
+
+</body>
+</html>
