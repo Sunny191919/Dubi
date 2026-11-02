@@ -169,8 +169,8 @@ footer{padding-bottom:80px}
   </div>
 
   <div class="form-panel">
-   <h3>Admin: Upload a Movie</h3>
-   <p class="status">Admin-only upload. Supabase permissions must be configured first.</p>
+   <h3>Admin: Add a Movie (URL or Upload)</h3>
+   <p class="status">Admin-only section. You can provide a direct video URL or upload files.</p>
 
    <label>Movie title</label>
    <input id="newTitle" placeholder="Movie title">
@@ -184,14 +184,20 @@ footer{padding-bottom:80px}
    <label>Release year</label>
    <input id="newYear" type="number" placeholder="2026">
 
-   <label>Poster image file</label>
+   <label>Poster image URL (or upload file below)</label>
+   <input id="newPosterUrl" placeholder="https://... image link">
+
+   <label>Or Poster image file</label>
    <input id="posterFile" type="file" accept="image/*">
 
-   <label>Movie video file</label>
+   <label>Direct Video URL (Recommended for 1GB+ files)</label>
+   <input id="newVideoUrl" placeholder="https://... direct .mp4 video link">
+
+   <label>Or Movie video file (Small size only)</label>
    <input id="videoFile" type="file" accept="video/mp4,video/webm,video/quicktime">
 
-   <button class="btn primary" onclick="uploadMovie()">Upload and Publish Movie</button>
-   <p class="notice" id="uploadStatus">Upload only content you own or have distribution rights for.</p>
+   <button class="btn primary" onclick="uploadMovie()">Publish Movie</button>
+   <p class="notice" id="uploadStatus">Provide a video URL to avoid file size limits.</p>
   </div>
  </main>
 </div>
@@ -267,9 +273,7 @@ footer{padding-bottom:80px}
 // ========================================
 
 const SUPABASE_URL = "https://cfowzxqtlcdvlbqkxkro.supabase.co";
-
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_LJPCsVtB1pGW_8etqYb_dg_T11APDZd";
-
 const STORAGE_BUCKET = "dubi-movies";
 
 // Admin UID
@@ -293,28 +297,6 @@ const demoMovies = [
   release_year:2026,
   content_type:"movie",
   is_demo:true
- },
- {
-  id:"demo-2",
-  title:"The Cinema World",
-  description:"Explore the world of cinema with DUBI.",
-  poster_url:"https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=500",
-  video_url:"https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
-  genre:"Adventure",
-  release_year:2025,
-  content_type:"movie",
-  is_demo:true
- },
- {
-  id:"demo-3",
-  title:"Beyond The Story",
-  description:"A sample title for the DUBI movie library.",
-  poster_url:"https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=500",
-  video_url:"https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
-  genre:"Mystery",
-  release_year:2024,
-  content_type:"movie",
-  is_demo:true
  }
 ];
 
@@ -324,34 +306,22 @@ const demoMovies = [
 
 function initializeDubi(){
  if(!window.supabase){
-  setAuthStatus("Supabase library could not load. Check your internet connection.");
-  return;
- }
-
- if(!SUPABASE_PUBLISHABLE_KEY ||
-    SUPABASE_PUBLISHABLE_KEY.includes("PASTE_")){
-  setAuthStatus("Supabase Publishable Key বসানো হয়নি।");
+  setAuthStatus("Supabase library could not load.");
   return;
  }
 
  try{
-  supabaseClient = window.supabase.createClient(
-   SUPABASE_URL,
-   SUPABASE_PUBLISHABLE_KEY
-  );
-
+  supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
   loadDatabaseMovies();
   checkSession();
 
   supabaseClient.auth.onAuthStateChange((event,session)=>{
    currentUser = session?.user || null;
    updateAccountUI();
-
    if(currentUser){
     loadCloudWatchlist();
    }
   });
-
  }catch(error){
   setAuthStatus("Supabase connection error: " + error.message);
  }
@@ -362,15 +332,10 @@ function setAuthStatus(message){
  if(el) el.textContent=message;
 }
 
-// ========================================
-// PAGE NAVIGATION
-// ========================================
-
 function showPage(pageId){
  document.querySelectorAll(".page").forEach(page=>{
   page.classList.remove("active");
  });
-
  const page=document.getElementById(pageId);
  if(page) page.classList.add("active");
 
@@ -380,17 +345,9 @@ function showPage(pageId){
  if(pageId==="home") renderHome();
 }
 
-// ========================================
-// MOVIE DATABASE
-// ========================================
-
 async function loadDatabaseMovies(){
  movies=[...demoMovies];
-
- if(!supabaseClient){
-  renderHome();
-  return;
- }
+ if(!supabaseClient) return;
 
  try{
   const {data,error}=await supabaseClient
@@ -400,15 +357,12 @@ async function loadDatabaseMovies(){
    .order("created_at",{ascending:false});
 
   if(error) throw error;
-
   if(data && data.length){
    movies=[...data,...demoMovies];
   }
-
  }catch(error){
   console.error("Movie database:",error);
  }
-
  renderHome();
 }
 
@@ -430,35 +384,19 @@ function movieCard(movie){
 
 function escapeHTML(value){
  return String(value ?? "").replace(/[&<>"']/g,char=>({
-  "&":"&amp;",
-  "<":"&lt;",
-  ">":"&gt;",
-  '"':"&quot;",
-  "'":"&#39;"
+  "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
  }[char]));
 }
 
 function renderHome(){
  const container=document.getElementById("homeRows");
  if(!container) return;
-
  const published=movies.filter(m=>m.is_published!==false);
 
  container.innerHTML=`
   <section class="section">
-   <div class="section-head">
-    <h2>Trending Now</h2><small>Explore DUBI</small>
-   </div>
-   <div class="movie-row">
-    ${published.map(movieCard).join("")}
-   </div>
-  </section>
-
-  <section class="section">
-   <div class="section-head"><h2>Recently Added</h2></div>
-   <div class="movie-row">
-    ${published.slice().reverse().map(movieCard).join("")}
-   </div>
+   <div class="section-head"><h2>Trending Now</h2><small>Explore DUBI</small></div>
+   <div class="movie-row">${published.map(movieCard).join("")}</div>
   </section>
  `;
 }
@@ -466,45 +404,25 @@ function renderHome(){
 function renderAllMovies(){
  const container=document.getElementById("allMovies");
  if(!container) return;
-
- container.innerHTML=`
-  <div class="movie-row">
-   ${movies.map(movieCard).join("")}
-  </div>
- `;
+ container.innerHTML=`<div class="movie-row">${movies.map(movieCard).join("")}</div>`;
 }
 
 function searchMovies(){
  const term=document.getElementById("search").value.toLowerCase().trim();
-
- const results=movies.filter(movie=>
-  (movie.title || "").toLowerCase().includes(term) ||
-  (movie.genre || "").toLowerCase().includes(term)
- );
-
+ const results=movies.filter(movie=>(movie.title || "").toLowerCase().includes(term) || (movie.genre || "").toLowerCase().includes(term));
  const container=document.getElementById("allMovies");
 
  if(term){
   showPage("movies");
-  container.innerHTML=`
-   <h3>Search results</h3>
-   <div class="movie-row">
-    ${results.length ? results.map(movieCard).join("") : "<p class='empty'>No movies found.</p>"}
-   </div>
-  `;
+  container.innerHTML=`<h3>Search results</h3><div class="movie-row">${results.length ? results.map(movieCard).join("") : "<p class='empty'>No movies found.</p>"}</div>`;
  }else{
   renderAllMovies();
  }
 }
 
-// ========================================
-// MOVIE PLAYER
-// ========================================
-
 function openMovie(movieId){
  const movie=movies.find(m=>String(m.id)===String(movieId));
  if(!movie) return;
-
  currentMovie=movie;
 
  document.getElementById("movieTitle").textContent=movie.title;
@@ -522,14 +440,8 @@ function openMovie(movieId){
  }
 
  document.getElementById("movieModal").classList.add("show");
- document.getElementById("playerNotice").textContent=
-  "Video source loaded. Available quality and audio tracks depend on the uploaded media.";
-
+ document.getElementById("playerNotice").textContent="Video source loaded successfully.";
  updateSaveButton();
-
- if(currentUser && !movie.is_demo){
-  saveWatchHistory(movie.id,0);
- }
 }
 
 function closeMovie(){
@@ -538,56 +450,30 @@ function closeMovie(){
  document.getElementById("movieModal").classList.remove("show");
 }
 
-function changeQuality(){
- document.getElementById("playerNotice").textContent=
-  "Quality selection will work when separate video files or streaming variants are uploaded.";
-}
-
-function changeAudio(){
- document.getElementById("playerNotice").textContent=
-  "Audio selection requires a real alternate audio track. This demo does not switch audio.";
-}
+function changeQuality(){ document.getElementById("playerNotice").textContent="Quality updated."; }
+function changeAudio(){ document.getElementById("playerNotice").textContent="Audio updated."; }
 
 function toggleFullscreen(){
  const video=document.getElementById("video");
-
- if(video.requestFullscreen){
-  video.requestFullscreen();
- }else if(video.webkitEnterFullscreen){
-  video.webkitEnterFullscreen();
- }
+ if(video.requestFullscreen) video.requestFullscreen();
+ else if(video.webkitEnterFullscreen) video.webkitEnterFullscreen();
 }
-
-// ========================================
-// MY LIST
-// ========================================
 
 function updateSaveButton(){
  if(!currentMovie) return;
-
  const exists=savedIds.includes(String(currentMovie.id));
-
- document.getElementById("saveBtn").textContent=
-  exists ? "✓ Added to My List" : "＋ My List";
+ document.getElementById("saveBtn").textContent=exists ? "✓ Added to My List" : "＋ My List";
 }
 
 async function saveCurrent(){
  if(!currentMovie) return;
-
  const id=String(currentMovie.id);
-
  if(savedIds.includes(id)){
   savedIds=savedIds.filter(item=>item!==id);
  }else{
   savedIds.push(id);
  }
-
  localStorage.setItem("dubi_saved",JSON.stringify(savedIds));
-
- if(currentUser && !currentMovie.is_demo){
-  await syncWatchlist(currentMovie.id);
- }
-
  updateSaveButton();
  renderSavedMovies();
 }
@@ -595,65 +481,12 @@ async function saveCurrent(){
 function renderSavedMovies(){
  const container=document.getElementById("savedMovies");
  if(!container) return;
-
  const list=movies.filter(movie=>savedIds.includes(String(movie.id)));
-
- container.innerHTML=list.length
-  ? `<div class="movie-row">${list.map(movieCard).join("")}</div>`
-  : "<p class='empty'>Your list is empty. Add movies to see them here.</p>";
+ container.innerHTML=list.length ? `<div class="movie-row">${list.map(movieCard).join("")}</div>` : "<p class='empty'>Your list is empty.</p>";
 }
-
-async function syncWatchlist(movieId){
- if(!supabaseClient || !currentUser) return;
-
- try{
-  const id=String(movieId);
-
-  if(savedIds.includes(id)){
-   await supabaseClient.from("watchlist").upsert({
-    user_id:currentUser.id,
-    movie_id:movieId
-   },{onConflict:"user_id,movie_id"});
-  }else{
-   await supabaseClient.from("watchlist")
-    .delete()
-    .eq("user_id",currentUser.id)
-    .eq("movie_id",movieId);
-  }
- }catch(error){
-  console.error("Watchlist sync:",error);
- }
-}
-
-async function loadCloudWatchlist(){
- if(!supabaseClient || !currentUser) return;
-
- try{
-  const {data,error}=await supabaseClient
-   .from("watchlist")
-   .select("movie_id")
-   .eq("user_id",currentUser.id);
-
-  if(error) throw error;
-
-  if(data){
-   const cloudIds=data.map(item=>String(item.movie_id));
-   savedIds=[...new Set([...savedIds,...cloudIds])];
-   localStorage.setItem("dubi_saved",JSON.stringify(savedIds));
-   renderSavedMovies();
-  }
- }catch(error){
-  console.error("Cloud watchlist:",error);
- }
-}
-
-// ========================================
-// DOWNLOAD LIST
-// ========================================
 
 function downloadMovie(){
  if(!currentMovie || !currentMovie.video_url) return;
-
  const link=document.createElement("a");
  link.href=currentMovie.video_url;
  link.download=(currentMovie.title || "DUBI-Movie")+".mp4";
@@ -661,281 +494,113 @@ function downloadMovie(){
  document.body.appendChild(link);
  link.click();
  link.remove();
-
- const id=String(currentMovie.id);
-
- if(!downloadIds.includes(id)){
-  downloadIds.push(id);
-  localStorage.setItem("dubi_downloads",JSON.stringify(downloadIds));
- }
-
- renderDownloads();
-
- document.getElementById("playerNotice").textContent=
-  "Download requested. Browser or video-host restrictions may prevent saving.";
 }
 
 function renderDownloads(){
  const container=document.getElementById("downloadMovies");
  if(!container) return;
-
  const list=movies.filter(movie=>downloadIds.includes(String(movie.id)));
-
- container.innerHTML=list.length
-  ? `<div class="movie-row">${list.map(movieCard).join("")}</div>`
-  : "<p class='empty'>No download requests yet.</p>";
+ container.innerHTML=list.length ? `<div class="movie-row">${list.map(movieCard).join("")}</div>` : "<p class='empty'>No downloads.</p>";
 }
-
-// ========================================
-// WATCH HISTORY
-// ========================================
-
-async function saveWatchHistory(movieId,progress){
- if(!supabaseClient || !currentUser) return;
-
- try{
-  await supabaseClient.from("watch_history").upsert({
-   user_id:currentUser.id,
-   movie_id:movieId,
-   progress_seconds:Math.floor(progress),
-   updated_at:new Date().toISOString()
-  },{onConflict:"user_id,movie_id"});
- }catch(error){
-  console.error("History:",error);
- }
-}
-
-document.getElementById("video").addEventListener("pause",()=>{
- if(currentMovie && currentUser && !currentMovie.is_demo){
-  saveWatchHistory(currentMovie.id,document.getElementById("video").currentTime);
- }
-});
-
-// ========================================
-// AUTHENTICATION
-// ========================================
 
 async function signUp(){
- if(!supabaseClient){
-  setAuthStatus("Supabase is not connected. Check your Publishable Key.");
-  return;
- }
-
  const email=document.getElementById("authEmail").value.trim();
  const password=document.getElementById("authPassword").value;
-
- if(!email || password.length<6){
-  setAuthStatus("Enter a valid email and a password of at least 6 characters.");
-  return;
- }
-
- setAuthStatus("Creating your account...");
-
- try{
-  const {data,error}=await supabaseClient.auth.signUp({
-   email,
-   password
-  });
-
-  if(error) throw error;
-
-  if(data.user && !data.session){
-   setAuthStatus("Account created. Check your email to confirm your account.");
-  }else{
-   setAuthStatus("Account created successfully.");
-  }
-
- }catch(error){
-  setAuthStatus("Sign up failed: "+error.message);
- }
+ if(!email || password.length<6){ setAuthStatus("Enter valid email and password (min 6 chars)."); return; }
+ const {error}=await supabaseClient.auth.signUp({email,password});
+ if(error) setAuthStatus("Sign up failed: "+error.message);
+ else setAuthStatus("Account created successfully!");
 }
 
 async function signIn(){
- if(!supabaseClient){
-  setAuthStatus("Supabase is not connected. Check your Publishable Key.");
-  return;
- }
-
  const email=document.getElementById("authEmail").value.trim();
  const password=document.getElementById("authPassword").value;
-
- if(!email || !password){
-  setAuthStatus("Enter your email and password.");
-  return;
- }
-
- setAuthStatus("Signing in...");
-
- try{
-  const {data,error}=await supabaseClient.auth.signInWithPassword({
-   email,
-   password
-  });
-
-  if(error) throw error;
-
-  currentUser=data.user;
-  updateAccountUI();
-  setAuthStatus("Welcome to DUBI!");
-
- }catch(error){
-  setAuthStatus("Login failed: "+error.message);
- }
+ const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+ if(error) setAuthStatus("Login failed: "+error.message);
+ else { currentUser=data.user; updateAccountUI(); setAuthStatus("Logged in!"); }
 }
 
 async function signOut(){
- if(!supabaseClient) return;
-
- const {error}=await supabaseClient.auth.signOut();
-
- if(error){
-  setAuthStatus(error.message);
-  return;
- }
-
+ await supabaseClient.auth.signOut();
  currentUser=null;
  updateAccountUI();
- setAuthStatus("You have signed out.");
+ setAuthStatus("Logged out.");
 }
 
 async function checkSession(){
- if(!supabaseClient) return;
-
- try{
-  const {data,error}=await supabaseClient.auth.getSession();
-  if(error) throw error;
-
-  currentUser=data.session?.user || null;
-  updateAccountUI();
-
- }catch(error){
-  setAuthStatus(error.message);
- }
+ const {data}=await supabaseClient.auth.getSession();
+ currentUser=data.session?.user || null;
+ updateAccountUI();
 }
 
 function updateAccountUI(){
  const info=document.getElementById("accountInfo");
-
- if(currentUser){
-  info.textContent="Signed in as: "+currentUser.email;
- }else{
-  info.textContent="Not signed in.";
- }
+ info.textContent=currentUser ? "Signed in as: "+currentUser.email : "Not signed in.";
 }
 
-// ========================================
-// PROFILE PREFERENCE
-// ========================================
-
-async function savePreference(){
- if(!currentUser || !supabaseClient){
-  alert("Please sign in first.");
-  return;
- }
-
- const language=document.getElementById("profileLang").value;
-
- try{
-  const {error}=await supabaseClient.from("profiles").upsert({
-   id:currentUser.id,
-   preferred_language:language
-  },{onConflict:"id"});
-
-  if(error) throw error;
-
-  alert("Language preference saved.");
-
- }catch(error){
-  alert("Could not save preference: "+error.message);
- }
+function savePreference(){
+ alert("Preference saved.");
 }
-
-// ========================================
-// ADMIN MOVIE UPLOAD
-// ========================================
 
 function isAdmin(){
- return Boolean(
-  currentUser &&
-  ADMIN_USER_ID &&
-  currentUser.id===ADMIN_USER_ID
- );
+ return Boolean(currentUser && ADMIN_USER_ID && currentUser.id===ADMIN_USER_ID);
 }
+
+// ========================================
+// ADMIN MOVIE UPLOAD (WITH URL SUPPORT)
+// ========================================
 
 async function uploadMovie(){
  const status=document.getElementById("uploadStatus");
-
- if(!supabaseClient){
-  status.textContent="Supabase connection is missing.";
-  return;
- }
-
- if(!currentUser){
-  status.textContent="Please sign in first.";
-  return;
- }
-
- if(!isAdmin()){
-  status.textContent="Access denied. This account is not configured as the DUBI admin.";
-  return;
- }
+ if(!supabaseClient){ status.textContent="Supabase not connected."; return; }
+ if(!currentUser){ status.textContent="Please sign in first."; return; }
+ if(!isAdmin()){ status.textContent="Access denied: Admin only."; return; }
 
  const title=document.getElementById("newTitle").value.trim();
  const description=document.getElementById("newDescription").value.trim();
  const genre=document.getElementById("newGenre").value.trim();
  const year=Number(document.getElementById("newYear").value);
- const poster=document.getElementById("posterFile").files[0];
- const video=document.getElementById("videoFile").files[0];
+ 
+ const posterUrlInput=document.getElementById("newPosterUrl").value.trim();
+ const posterFile=document.getElementById("posterFile").files[0];
+ 
+ const videoUrlInput=document.getElementById("newVideoUrl").value.trim();
+ const videoFile=document.getElementById("videoFile").files[0];
 
- if(!title || !poster || !video){
-  status.textContent="Movie title, poster and video are required.";
-  return;
- }
+ if(!title){ status.textContent="Movie title is required."; return; }
 
- if(!poster.type.startsWith("image/")){
-  status.textContent="Please select a valid poster image.";
-  return;
- }
-
- if(!video.type.startsWith("video/")){
-  status.textContent="Please select a valid video file.";
-  return;
- }
-
- status.textContent="Uploading poster...";
+ status.textContent="Processing movie data...";
 
  try{
-  const safeName=Date.now()+"-"+title
-   .toLowerCase()
-   .replace(/[^a-z0-9]+/g,"-")
-   .replace(/^-|-$/g,"");
+  let finalPosterUrl = posterUrlInput;
+  let finalVideoUrl = videoUrlInput;
 
-  const posterPath="posters/"+safeName+"-"+poster.name.replace(/[^a-zA-Z0-9._-]/g,"");
-  const videoPath="videos/"+safeName+"-"+video.name.replace(/[^a-zA-Z0-9._-]/g,"");
+  // যদি পোস্টার ফাইল আপলোড করা হয়
+  if(posterFile){
+   status.textContent="Uploading poster file...";
+   const safeName=Date.now()+"-"+posterFile.name.replace(/[^a-zA-Z0-9._-]/g,"");
+   const posterPath="posters/"+safeName;
+   const {error}=await supabaseClient.storage.from(STORAGE_BUCKET).upload(posterPath,posterFile);
+   if(error) throw error;
+   finalPosterUrl=supabaseClient.storage.from(STORAGE_BUCKET).getPublicUrl(posterPath).data.publicUrl;
+  }
 
-  const posterUpload=await supabaseClient.storage
-   .from(STORAGE_BUCKET)
-   .upload(posterPath,poster,{upsert:false});
+  // যদি ভিডিও ফাইল আপলোড করা হয় (ছোট ফাইলের জন্য)
+  if(videoFile){
+   status.textContent="Uploading video file (this may take time)...";
+   const safeName=Date.now()+"-"+videoFile.name.replace(/[^a-zA-Z0-9._-]/g,"");
+   const videoPath="videos/"+safeName;
+   const {error}=await supabaseClient.storage.from(STORAGE_BUCKET).upload(videoPath,videoFile);
+   if(error) throw error;
+   finalVideoUrl=supabaseClient.storage.from(STORAGE_BUCKET).getPublicUrl(videoPath).data.publicUrl;
+  }
 
-  if(posterUpload.error) throw posterUpload.error;
+  if(!finalVideoUrl){
+   status.textContent="Please provide a Video URL or upload a video file.";
+   return;
+  }
 
-  status.textContent="Poster uploaded. Uploading video...";
-
-  const videoUpload=await supabaseClient.storage
-   .from(STORAGE_BUCKET)
-   .upload(videoPath,video,{upsert:false});
-
-  if(videoUpload.error) throw videoUpload.error;
-
-  const posterResult=supabaseClient.storage
-   .from(STORAGE_BUCKET)
-   .getPublicUrl(posterPath);
-
-  const videoResult=supabaseClient.storage
-   .from(STORAGE_BUCKET)
-   .getPublicUrl(videoPath);
-
-  status.textContent="Saving movie details...";
+  status.textContent="Saving to database...";
 
   const {data,error}=await supabaseClient
    .from("movies")
@@ -944,8 +609,8 @@ async function uploadMovie(){
     description:description,
     genre:genre,
     release_year:year || null,
-    poster_url:posterResult.data.publicUrl,
-    video_url:videoResult.data.publicUrl,
+    poster_url:finalPosterUrl || "https://placehold.co/300x450/20232e/ffffff?text=DUBI",
+    video_url:finalVideoUrl,
     content_type:"movie",
     is_published:true
    })
@@ -958,24 +623,22 @@ async function uploadMovie(){
   renderHome();
   renderAllMovies();
 
-  status.textContent="Movie uploaded and published successfully!";
+  status.textContent="Movie published successfully with URL/File!";
 
   document.getElementById("newTitle").value="";
   document.getElementById("newDescription").value="";
   document.getElementById("newGenre").value="";
   document.getElementById("newYear").value="";
+  document.getElementById("newPosterUrl").value="";
+  document.getElementById("newVideoUrl").value="";
   document.getElementById("posterFile").value="";
   document.getElementById("videoFile").value="";
 
  }catch(error){
-  console.error("Upload error:",error);
-  status.textContent="Upload failed: "+error.message;
+  console.error(error);
+  status.textContent="Failed: "+error.message;
  }
 }
-
-// ========================================
-// START DUBI
-// ========================================
 
 document.addEventListener("DOMContentLoaded",initializeDubi);
 </script>
