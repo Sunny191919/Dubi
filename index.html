@@ -49,8 +49,8 @@ footer{border-top:1px solid #242630;padding:30px 5%;color:#888;text-align:center
 .modal-box{background:#12141d;max-width:850px;margin:20px auto;border:1px solid #343744;border-radius:12px;overflow:hidden}
 .modal-top{display:flex;justify-content:space-between;padding:15px 20px;align-items:center}
 .close{background:#292c38;color:white;border:0;border-radius:50%;width:35px;height:35px;font-size:20px}
-.player{background:#000}
-video{width:100%;max-height:480px;display:block}
+.player{background:#000;position:relative;width:100%;min-height:360px}
+video, iframe{width:100%;height:450px;display:block;border:0}
 .details{padding:20px}
 .details h2{margin-top:0}
 .details p{color:#bbb;line-height:1.6}
@@ -170,7 +170,7 @@ footer{padding-bottom:80px}
 
   <div class="form-panel">
    <h3>Admin: Add a Movie (URL or Upload)</h3>
-   <p class="status">Admin-only section. You can provide a direct video URL or upload files.</p>
+   <p class="status">Admin-only section. YouTube, Google Drive, or Direct Video URL supported.</p>
 
    <label>Movie title</label>
    <input id="newTitle" placeholder="Movie title">
@@ -190,14 +190,14 @@ footer{padding-bottom:80px}
    <label>Or Poster image file</label>
    <input id="posterFile" type="file" accept="image/*">
 
-   <label>Direct Video URL (Recommended for 1GB+ files)</label>
-   <input id="newVideoUrl" placeholder="https://... direct .mp4 video link">
+   <label>Video URL (YouTube, Google Drive preview link, or MP4)</label>
+   <input id="newVideoUrl" placeholder="https://youtube.com/... or https://drive.google.com/file/d/.../preview">
 
    <label>Or Movie video file (Small size only)</label>
    <input id="videoFile" type="file" accept="video/mp4,video/webm,video/quicktime">
 
    <button class="btn primary" onclick="uploadMovie()">Publish Movie</button>
-   <p class="notice" id="uploadStatus">Provide a video URL to avoid file size limits.</p>
+   <p class="notice" id="uploadStatus">Provide any supported video link.</p>
   </div>
  </main>
 </div>
@@ -210,7 +210,8 @@ footer{padding-bottom:80px}
   </div>
 
   <div class="player">
-   <video id="video" controls playsinline></video>
+   <iframe id="videoIframe" style="display:none;" frameborder="0" allowfullscreen></iframe>
+   <video id="video" controls playsinline style="display:none;"></video>
   </div>
 
   <div class="details">
@@ -430,13 +431,50 @@ function openMovie(movieId){
  document.getElementById("movieDescription").textContent=movie.description || "Enjoy watching on DUBI.";
 
  const video=document.getElementById("video");
+ const iframe=document.getElementById("videoIframe");
+
  video.pause();
  video.removeAttribute("src");
- video.load();
+ video.style.display="none";
+ iframe.style.display="none";
+ iframe.src="";
 
  if(movie.video_url){
-  video.src=movie.video_url;
-  video.load();
+  let url=movie.video_url.trim();
+
+  // YouTube Link Handling
+  if(url.includes("youtu.be/") || url.includes("youtube.com/")){
+   let videoId="";
+   if(url.includes("youtu.be/")){
+    videoId=url.split("youtu.be/")[1].split("?")[0];
+   }else if(url.includes("watch?v=")){
+    videoId=url.split("watch?v=")[1].split("&")[0];
+   }
+   iframe.src="https://www.youtube.com/embed/"+videoId+"?autoplay=1";
+   iframe.style.display="block";
+  }
+  // Google Drive Link Handling (Converts view/sharing link to embed/preview link)
+  else if(url.includes("drive.google.com")){
+   let fileId="";
+   if(url.includes("/file/d/")){
+    fileId=url.split("/file/d/")[1].split("/")[0];
+   }else if(url.includes("id=")){
+    fileId=url.split("id=")[1].split("&")[0];
+   }
+   if(fileId){
+    iframe.src="https://drive.google.com/file/d/"+fileId+"/preview";
+    iframe.style.display="block";
+   }else{
+    iframe.src=url;
+    iframe.style.display="block";
+   }
+  }
+  // Direct Video Link (MP4/WebM)
+  else{
+   video.src=url;
+   video.style.display="block";
+   video.load();
+  }
  }
 
  document.getElementById("movieModal").classList.add("show");
@@ -446,7 +484,9 @@ function openMovie(movieId){
 
 function closeMovie(){
  const video=document.getElementById("video");
+ const iframe=document.getElementById("videoIframe");
  video.pause();
+ iframe.src="";
  document.getElementById("movieModal").classList.remove("show");
 }
 
@@ -454,9 +494,9 @@ function changeQuality(){ document.getElementById("playerNotice").textContent="Q
 function changeAudio(){ document.getElementById("playerNotice").textContent="Audio updated."; }
 
 function toggleFullscreen(){
- const video=document.getElementById("video");
- if(video.requestFullscreen) video.requestFullscreen();
- else if(video.webkitEnterFullscreen) video.webkitEnterFullscreen();
+ const modalBox=document.querySelector(".modal-box");
+ if(modalBox.requestFullscreen) modalBox.requestFullscreen();
+ else if(modalBox.webkitRequestFullscreen) modalBox.webkitRequestFullscreen();
 }
 
 function updateSaveButton(){
@@ -575,7 +615,6 @@ async function uploadMovie(){
   let finalPosterUrl = posterUrlInput;
   let finalVideoUrl = videoUrlInput;
 
-  // যদি পোস্টার ফাইল আপলোড করা হয়
   if(posterFile){
    status.textContent="Uploading poster file...";
    const safeName=Date.now()+"-"+posterFile.name.replace(/[^a-zA-Z0-9._-]/g,"");
@@ -585,7 +624,6 @@ async function uploadMovie(){
    finalPosterUrl=supabaseClient.storage.from(STORAGE_BUCKET).getPublicUrl(posterPath).data.publicUrl;
   }
 
-  // যদি ভিডিও ফাইল আপলোড করা হয় (ছোট ফাইলের জন্য)
   if(videoFile){
    status.textContent="Uploading video file (this may take time)...";
    const safeName=Date.now()+"-"+videoFile.name.replace(/[^a-zA-Z0-9._-]/g,"");
@@ -602,6 +640,15 @@ async function uploadMovie(){
 
   status.textContent="Saving to database...";
 
+  const {data,error}=updateDatabaseRow(title, description, genre, year, finalPosterUrl, finalVideoUrl, status);
+
+ }catch(error){
+  console.error(error);
+  status.textContent="Failed: "+error.message;
+ }
+}
+
+async function updateDatabaseRow(title, description, genre, year, finalPosterUrl, finalVideoUrl, status){
   const {data,error}=await supabaseClient
    .from("movies")
    .insert({
@@ -633,11 +680,6 @@ async function uploadMovie(){
   document.getElementById("newVideoUrl").value="";
   document.getElementById("posterFile").value="";
   document.getElementById("videoFile").value="";
-
- }catch(error){
-  console.error(error);
-  status.textContent="Failed: "+error.message;
- }
 }
 
 document.addEventListener("DOMContentLoaded",initializeDubi);
