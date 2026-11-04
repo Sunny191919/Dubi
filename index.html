@@ -50,8 +50,8 @@ footer{border-top:1px solid #242630;padding:30px 5%;color:#888;text-align:center
 .modal-box{background:#12141d;max-width:850px;margin:20px auto;border:1px solid #343744;border-radius:12px;overflow:hidden}
 .modal-top{display:flex;justify-content:space-between;padding:15px 20px;align-items:center}
 .close{background:#292c38;color:white;border:0;border-radius:50%;width:35px;height:35px;font-size:20px}
-.player{background:#000;position:relative;width:100%;min-height:360px}
-video, iframe{width:100%;height:450px;display:block;border:0}
+.player{background:#000;position:relative;width:100%;min-height:360px;overflow:hidden;border-radius:8px;}
+video, iframe{width:100%;height:450px;display:block;border:0;outline:none;}
 .details{padding:20px}
 .details h2{margin-top:0}
 .details p{color:#bbb;line-height:1.6}
@@ -108,7 +108,7 @@ footer{padding-bottom:80px}
    <h1>ONE MOVIE.<br>EVERY LANGUAGE.</h1>
    <p>Discover movies from around the world. Watch, explore and enjoy entertainment in your preferred language.</p>
    <div class="meta">✦ Global Cinema &nbsp; • &nbsp; Multiple Languages</div>
-   <button class="btn primary" onclick="openMovie(1)">▶ Explore Now</button>
+   <button class="btn primary" onclick="openMovie('demo-1')">▶ Explore Now</button>
    <button class="btn secondary" onclick="showPage('movies')">Browse Movies</button>
   </div>
  </section>
@@ -131,7 +131,7 @@ footer{padding-bottom:80px}
  <main>
   <h2>My Downloads ⬇</h2>
   <div id="downloadMovies"></div>
-  <p class="notice">Download support depends on the media host and browser.</p>
+  <p class="notice">Download files directly through DUBI.</p>
  </main>
 </div>
 
@@ -243,7 +243,7 @@ footer{padding-bottom:80px}
    </div>
 
    <div class="controls">
-    <button class="download" onclick="downloadMovie()">⬇ Download</button>
+    <button class="download" onclick="downloadMovie()">⬇ Download via DUBI</button>
     <button class="small-btn" id="saveBtn" onclick="saveCurrent()">＋ My List</button>
     <button class="small-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
    </div>
@@ -320,9 +320,6 @@ function initializeDubi(){
   supabaseClient.auth.onAuthStateChange((event,session)=>{
    currentUser = session?.user || null;
    updateAccountUI();
-   if(currentUser){
-    loadCloudWatchlist();
-   }
   });
  }catch(error){
   setAuthStatus("Supabase connection error: " + error.message);
@@ -451,10 +448,10 @@ function openMovie(movieId){
    }else if(url.includes("watch?v=")){
     videoId=url.split("watch?v=")[1].split("&")[0];
    }
-   iframe.src="https://www.youtube.com/embed/"+videoId+"?autoplay=1";
+   iframe.src="https://www.youtube.com/embed/"+videoId+"?autoplay=1&modestbranding=1&rel=0";
    iframe.style.display="block";
   }
-  // Google Drive Link Handling (Converts view/sharing link to embed/preview link)
+  // Google Drive Link Handling
   else if(url.includes("drive.google.com")){
    let fileId="";
    if(url.includes("/file/d/")){
@@ -470,7 +467,7 @@ function openMovie(movieId){
     iframe.style.display="block";
    }
   }
-  // Other embed/web links or Direct Video Link
+  // Direct Video Link or Web Embed
   else if(url.startsWith("http://") || url.startsWith("https://")){
    if(url.includes(".mp4") || url.includes(".webm") || url.includes(".mov")){
     video.src=url;
@@ -484,7 +481,7 @@ function openMovie(movieId){
  }
 
  document.getElementById("movieModal").classList.add("show");
- document.getElementById("playerNotice").textContent="Video source loaded successfully.";
+ document.getElementById("playerNotice").textContent="Video source loaded successfully via DUBI.";
  updateSaveButton();
 }
 
@@ -533,20 +530,31 @@ function renderSavedMovies(){
 
 function downloadMovie(){
  if(!currentMovie || !currentMovie.video_url) return;
+ const url = currentMovie.video_url;
+ 
+ // Force download through page using fetch/blob or direct anchor download
  const link=document.createElement("a");
- link.href=currentMovie.video_url;
- link.download=(currentMovie.title || "DUBI-Movie")+".mp4";
- link.target="_blank";
+ link.href = url;
+ link.setAttribute("download", (currentMovie.title || "DUBI-Movie") + ".mp4");
+ link.setAttribute("target", "_blank");
  document.body.appendChild(link);
  link.click();
  link.remove();
+
+ // Track in local downloads list
+ const id = String(currentMovie.id);
+ if(!downloadIds.includes(id)){
+  downloadIds.push(id);
+  localStorage.setItem("dubi_downloads", JSON.stringify(downloadIds));
+  renderDownloads();
+ }
 }
 
 function renderDownloads(){
  const container=document.getElementById("downloadMovies");
  if(!container) return;
  const list=movies.filter(movie=>downloadIds.includes(String(movie.id)));
- container.innerHTML=list.length ? `<div class="movie-row">${list.map(movieCard).join("")}</div>` : "<p class='empty'>No downloads.</p>";
+ container.innerHTML=list.length ? `<div class="movie-row">${list.map(movieCard).join("")}</div>` : "<p class='empty'>No downloads yet.</p>";
 }
 
 async function signUp(){
@@ -593,7 +601,7 @@ function isAdmin(){
 }
 
 // ========================================
-// ADMIN MOVIE UPLOAD (WITH URL SUPPORT)
+// ADMIN MOVIE UPLOAD
 // ========================================
 
 async function uploadMovie(){
@@ -631,7 +639,7 @@ async function uploadMovie(){
   }
 
   if(videoFile){
-   status.textContent="Uploading video file (this may take time)...";
+   status.textContent="Uploading video file...";
    const safeName=Date.now()+"-"+videoFile.name.replace(/[^a-zA-Z0-9._-]/g,"");
    const videoPath="videos/"+safeName;
    const {error}=await supabaseClient.storage.from(STORAGE_BUCKET).upload(videoPath,videoFile);
@@ -676,7 +684,7 @@ async function updateDatabaseRow(title, description, genre, year, finalPosterUrl
   renderHome();
   renderAllMovies();
 
-  status.textContent="Movie published successfully with URL/File!";
+  status.textContent="Movie published successfully!";
 
   document.getElementById("newTitle").value="";
   document.getElementById("newDescription").value="";
