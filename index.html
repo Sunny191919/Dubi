@@ -431,16 +431,17 @@ function openMovie(movieId){
  const video=document.getElementById("video");
  const iframe=document.getElementById("videoIframe");
 
+ // প্রথমে দুটোই পুরোপুরি বন্ধ ও ক্লিয়ার করা হলো
  video.pause();
  video.removeAttribute("src");
  video.style.display="none";
- iframe.style.display="none";
  iframe.src="";
+ iframe.style.display="none";
 
  if(movie.video_url){
   let url=movie.video_url.trim();
 
-  // YouTube Link Handling
+  // ১. ইউটিউব লিংক হলে শুধু iframe চলবে, video ট্যাগ টোটাল অফ থাকবে
   if(url.includes("youtu.be/") || url.includes("youtube.com/")){
    let videoId="";
    if(url.includes("youtu.be/")){
@@ -450,8 +451,9 @@ function openMovie(movieId){
    }
    iframe.src="https://www.youtube.com/embed/"+videoId+"?autoplay=1&modestbranding=1&rel=0";
    iframe.style.display="block";
+   video.style.display="none";
   }
-  // Google Drive Link Handling
+  // ২. গুগল ড্রাইভ লিংক হলে শুধু iframe চলবে, video ট্যাগ টোটাল অফ থাকবে
   else if(url.includes("drive.google.com")){
    let fileId="";
    if(url.includes("/file/d/")){
@@ -461,22 +463,18 @@ function openMovie(movieId){
    }
    if(fileId){
     iframe.src="https://drive.google.com/file/d/"+fileId+"/preview";
-    iframe.style.display="block";
    }else{
     iframe.src=url;
-    iframe.style.display="block";
    }
+   iframe.style.display="block";
+   video.style.display="none";
   }
-  // Direct Video Link or Web Embed
-  else if(url.startsWith("http://") || url.startsWith("https://")){
-   if(url.includes(".mp4") || url.includes(".webm") || url.includes(".mov")){
-    video.src=url;
-    video.style.display="block";
-    video.load();
-   }else{
-    iframe.src=url;
-    iframe.style.display="block";
-   }
+  // ৩. ডিরেক্ট এমপিফোর (.mp4) বা অন্য ফাইল হলে শুধু video ট্যাগ চলবে, iframe টোটাল অফ থাকবে
+  else {
+   video.src=url;
+   video.style.display="block";
+   iframe.style.display="none";
+   video.load();
   }
  }
 
@@ -489,6 +487,7 @@ function closeMovie(){
  const video=document.getElementById("video");
  const iframe=document.getElementById("videoIframe");
  video.pause();
+ video.removeAttribute("src");
  iframe.src="";
  document.getElementById("movieModal").classList.remove("show");
 }
@@ -532,7 +531,6 @@ function downloadMovie(){
  if(!currentMovie || !currentMovie.video_url) return;
  const url = currentMovie.video_url;
  
- // Force download through page using fetch/blob or direct anchor download
  const link=document.createElement("a");
  link.href = url;
  link.setAttribute("download", (currentMovie.title || "DUBI-Movie") + ".mp4");
@@ -541,7 +539,6 @@ function downloadMovie(){
  link.click();
  link.remove();
 
- // Track in local downloads list
  const id = String(currentMovie.id);
  if(!downloadIds.includes(id)){
   downloadIds.push(id);
