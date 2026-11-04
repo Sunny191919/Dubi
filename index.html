@@ -470,11 +470,16 @@ function openMovie(movieId){
     iframe.style.display="block";
    }
   }
-  // Direct Video Link (MP4/WebM)
-  else{
-   video.src=url;
-   video.style.display="block";
-   video.load();
+  // Other embed/web links or Direct Video Link
+  else if(url.startsWith("http://") || url.startsWith("https://")){
+   if(url.includes(".mp4") || url.includes(".webm") || url.includes(".mov")){
+    video.src=url;
+    video.style.display="block";
+    video.load();
+   }else{
+    iframe.src=url;
+    iframe.style.display="block";
+   }
   }
  }
 
@@ -641,7 +646,7 @@ async function uploadMovie(){
 
   status.textContent="Saving to database...";
 
-  const {data,error}=updateDatabaseRow(title, description, genre, year, finalPosterUrl, finalVideoUrl, status);
+  await updateDatabaseRow(title, description, genre, year, finalPosterUrl, finalVideoUrl, status);
 
  }catch(error){
   console.error(error);
