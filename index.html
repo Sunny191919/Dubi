@@ -55,6 +55,12 @@ footer{border-top:1px solid #242630;padding:30px 5%;color:#888;text-align:center
 .player{background:#000;position:relative;width:100%;min-height:360px;overflow:hidden;border-radius:8px;display:flex;align-items:center;justify-content:center;}
 .player video, .player iframe{width:100%;height:450px;display:block;border:0;outline:none;background:#000;}
 
+/* Hide mobile browser native video controls overlays completely */
+video::-webkit-media-controls { display: none !important; }
+video::-webkit-media-controls-panel { display: none !important; }
+video::-webkit-media-controls-play-button { display: none !important; }
+video::-webkit-media-controls-start-playback-button { display: none !important; }
+
 /* Custom Overlay Controls */
 .dubi-custom-controls{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.85));padding:15px 15px 10px;display:flex;flex-direction:column;gap:8px;opacity:0;transition:opacity 0.3s;z-index:5;}
 .player:hover .dubi-custom-controls, .dubi-custom-controls.active{opacity:1;}
@@ -225,21 +231,20 @@ footer{padding-bottom:80px}
    <button class="close" onclick="closeMovie()">×</button>
   </div>
 
-  <div class="player" id="playerWrapper">
+  <div class="player" id="playerWrapper" onclick="toggleControlsVisible()">
    <iframe id="videoIframe" style="display:none;" frameborder="0" allowfullscreen></iframe>
    
-   <!-- Native controls attribute removed to use DUBI custom controls exclusively -->
    <video id="video" playsinline style="display:none;"></video>
 
    <!-- DUBI Custom Overlay Controls Bar -->
-   <div class="dubi-custom-controls" id="dubiControls">
-    <div class="progress-container" id="progressContainer" onclick="seekVideo(event)">
+   <div class="dubi-custom-controls active" id="dubiControls">
+    <div class="progress-container" id="progressContainer" onclick="event.stopPropagation(); seekVideo(event)">
      <div class="progress-bar" id="progressBar"></div>
     </div>
-    <div class="controls-row">
+    <div class="controls-row" onclick="event.stopPropagation()">
      <div class="controls-left">
       <button class="ctrl-btn" id="playPauseBtn" onclick="togglePlayPause()">▶</button>
-      <button class="ctrl-btn" onclick="skipTime(10)">↺ 10s</button>
+      <button class="ctrl-btn" onclick="skipTime(-10)">↺ 10s</button>
       <button class="ctrl-btn" onclick="skipTime(10)">10s ↻</button>
       <span class="time-display" id="timeDisplay">0:00 / 0:00</span>
       <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.05" value="1" oninput="changeVolume(this.value)">
@@ -489,7 +494,7 @@ function openMovie(movieId){
    }
    iframe.src="https://www.youtube.com/embed/"+videoId+"?autoplay=1&modestbranding=1&rel=0";
    iframe.style.display="block";
-   dubiControls.style.display="none"; // Hide custom overlay for iframe videos to avoid conflict
+   dubiControls.style.display="none";
   }
   // Google Drive Link Handling
   else if(url.includes("drive.google.com")){
@@ -507,7 +512,7 @@ function openMovie(movieId){
    iframe.style.display="block";
    dubiControls.style.display="none";
   }
-  // Direct MP4 / WebM Video Links (Uses DUBI Custom Controls Exclusively)
+  // Direct MP4 / WebM Video Links
   else {
    video.src=url;
    video.style.display="block";
@@ -599,6 +604,13 @@ function togglePlayerFullscreen(){
  const wrapper = document.getElementById("playerWrapper");
  if(wrapper.requestFullscreen) wrapper.requestFullscreen();
  else if(wrapper.webkitRequestFullscreen) wrapper.webkitRequestFullscreen();
+}
+
+function toggleControlsVisible(){
+ const ctrl = document.getElementById("dubiControls");
+ if(ctrl){
+  ctrl.classList.toggle("active");
+ }
 }
 
 function changeQuality(){ document.getElementById("playerNotice").textContent="Quality updated."; }
