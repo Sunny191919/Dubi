@@ -50,8 +50,22 @@ footer{border-top:1px solid #242630;padding:30px 5%;color:#888;text-align:center
 .modal-box{background:#12141d;max-width:850px;margin:20px auto;border:1px solid #343744;border-radius:12px;overflow:hidden}
 .modal-top{display:flex;justify-content:space-between;padding:15px 20px;align-items:center}
 .close{background:#292c38;color:white;border:0;border-radius:50%;width:35px;height:35px;font-size:20px}
-.player{background:#000;position:relative;width:100%;min-height:360px;overflow:hidden;border-radius:8px;}
-video, iframe{width:100%;height:450px;display:block;border:0;outline:none;}
+
+/* Custom DUBI Player UI Styles */
+.player{background:#000;position:relative;width:100%;min-height:360px;overflow:hidden;border-radius:8px;display:flex;align-items:center;justify-content:center;}
+.player video, .player iframe{width:100%;height:450px;display:block;border:0;outline:none;background:#000;}
+
+/* Custom Overlay Controls */
+.dubi-custom-controls{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.85));padding:15px 15px 10px;display:flex;flex-direction:column;gap:8px;opacity:0;transition:opacity 0.3s;z-index:5;}
+.player:hover .dubi-custom-controls, .dubi-custom-controls.active{opacity:1;}
+.progress-container{width:100%;height:5px;background:rgba(255,255,255,0.3);border-radius:3px;cursor:pointer;position:relative;}
+.progress-bar{height:100%;background:var(--red);border-radius:3px;width:0%;position:relative;}
+.controls-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.controls-left, .controls-right{display:flex;align-items:center;gap:12px;}
+.ctrl-btn{background:none;border:0;color:white;font-size:16px;cursor:pointer;padding:4px;display:grid;place-items:center;}
+.time-display{font-size:12px;color:#ddd;min-width:75px;}
+.volume-slider{width:70px;accent-color:var(--red);cursor:pointer;}
+
 .details{padding:20px}
 .details h2{margin-top:0}
 .details p{color:#bbb;line-height:1.6}
@@ -203,6 +217,7 @@ footer{padding-bottom:80px}
  </main>
 </div>
 
+<!-- Modal Movie Player -->
 <div class="modal" id="movieModal" onclick="if(event.target===this)closeMovie()">
  <div class="modal-box">
   <div class="modal-top">
@@ -210,9 +225,32 @@ footer{padding-bottom:80px}
    <button class="close" onclick="closeMovie()">×</button>
   </div>
 
-  <div class="player">
+  <div class="player" id="playerWrapper">
    <iframe id="videoIframe" style="display:none;" frameborder="0" allowfullscreen></iframe>
-   <video id="video" controls playsinline style="display:none;"></video>
+   
+   <!-- Native controls attribute removed to use DUBI custom controls exclusively -->
+   <video id="video" playsinline style="display:none;"></video>
+
+   <!-- DUBI Custom Overlay Controls Bar -->
+   <div class="dubi-custom-controls" id="dubiControls">
+    <div class="progress-container" id="progressContainer" onclick="seekVideo(event)">
+     <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="controls-row">
+     <div class="controls-left">
+      <button class="ctrl-btn" id="playPauseBtn" onclick="togglePlayPause()">▶</button>
+      <button class="ctrl-btn" onclick="skipTime(10)">↺ 10s</button>
+      <button class="ctrl-btn" onclick="skipTime(10)">10s ↻</button>
+      <span class="time-display" id="timeDisplay">0:00 / 0:00</span>
+      <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.05" value="1" oninput="changeVolume(this.value)">
+     </div>
+     <div class="controls-right">
+      <button class="ctrl-btn" onclick="toggleSubtitles()" title="Subtitles">💬</button>
+      <button class="ctrl-btn" onclick="cycleSpeed()" id="speedBtn" title="Playback Speed">1x</button>
+      <button class="ctrl-btn" onclick="togglePlayerFullscreen()" title="Fullscreen">⛶</button>
+     </div>
+    </div>
+   </div>
   </div>
 
   <div class="details">
@@ -234,7 +272,7 @@ footer{padding-bottom:80px}
      <option value="Korean">Korean</option>
     </select>
 
-    <select id="speed" onchange="document.getElementById('video').playbackRate=this.value">
+    <select id="speedSelect" onchange="setSpeed(this.value)">
      <option value="1">Speed: 1x</option>
      <option value="1.25">1.25x</option>
      <option value="1.5">1.5x</option>
@@ -430,8 +468,8 @@ function openMovie(movieId){
 
  const video=document.getElementById("video");
  const iframe=document.getElementById("videoIframe");
+ const dubiControls=document.getElementById("dubiControls");
 
- // প্রথমে দুটোই পুরোপুরি বন্ধ ও ক্লিয়ার করা হলো
  video.pause();
  video.removeAttribute("src");
  video.style.display="none";
@@ -441,7 +479,7 @@ function openMovie(movieId){
  if(movie.video_url){
   let url=movie.video_url.trim();
 
-  // ১. ইউটিউব লিংক হলে শুধু iframe চলবে, video ট্যাগ টোটাল অফ থাকবে
+  // YouTube Link Handling
   if(url.includes("youtu.be/") || url.includes("youtube.com/")){
    let videoId="";
    if(url.includes("youtu.be/")){
@@ -451,9 +489,9 @@ function openMovie(movieId){
    }
    iframe.src="https://www.youtube.com/embed/"+videoId+"?autoplay=1&modestbranding=1&rel=0";
    iframe.style.display="block";
-   video.style.display="none";
+   dubiControls.style.display="none"; // Hide custom overlay for iframe videos to avoid conflict
   }
-  // ২. গুগল ড্রাইভ লিংক হলে শুধু iframe চলবে, video ট্যাগ টোটাল অফ থাকবে
+  // Google Drive Link Handling
   else if(url.includes("drive.google.com")){
    let fileId="";
    if(url.includes("/file/d/")){
@@ -467,13 +505,13 @@ function openMovie(movieId){
     iframe.src=url;
    }
    iframe.style.display="block";
-   video.style.display="none";
+   dubiControls.style.display="none";
   }
-  // ৩. ডিরেক্ট এমপিফোর (.mp4) বা অন্য ফাইল হলে শুধু video ট্যাগ চলবে, iframe টোটাল অফ থাকবে
+  // Direct MP4 / WebM Video Links (Uses DUBI Custom Controls Exclusively)
   else {
    video.src=url;
    video.style.display="block";
-   iframe.style.display="none";
+   dubiControls.style.display="flex";
    video.load();
   }
  }
@@ -490,6 +528,77 @@ function closeMovie(){
  video.removeAttribute("src");
  iframe.src="";
  document.getElementById("movieModal").classList.remove("show");
+}
+
+// ========================================
+// CUSTOM DUBI PLAYER CONTROLS LOGIC
+// ========================================
+
+const videoEl = document.getElementById("video");
+
+videoEl.addEventListener("timeupdate", () => {
+ const progressBar = document.getElementById("progressBar");
+ const timeDisplay = document.getElementById("timeDisplay");
+ if(videoEl.duration){
+  const percent = (videoEl.currentTime / videoEl.duration) * 100;
+  progressBar.style.width = percent + "%";
+  timeDisplay.textContent = formatTime(videoEl.currentTime) + " / " + formatTime(videoEl.duration);
+ }
+});
+
+function formatTime(seconds){
+ const m = Math.floor(seconds / 60);
+ const s = Math.floor(seconds % 60);
+ return m + ":" + (s < 10 ? "0" : "") + s;
+}
+
+function togglePlayPause(){
+ const playBtn = document.getElementById("playPauseBtn");
+ if(videoEl.paused){
+  videoEl.play();
+  playBtn.textContent = "⏸";
+ }else{
+  videoEl.pause();
+  playBtn.textContent = "▶";
+ }
+}
+
+function skipTime(value){
+ videoEl.currentTime += value;
+}
+
+function seekVideo(e){
+ const container = document.getElementById("progressContainer");
+ const rect = container.getBoundingClientRect();
+ const pos = (e.clientX - rect.left) / container.clientWidth;
+ videoEl.currentTime = pos * videoEl.duration;
+}
+
+function changeVolume(val){
+ videoEl.volume = val;
+}
+
+const speeds = [1, 1.25, 1.5, 2];
+let currentSpeedIdx = 0;
+function cycleSpeed(){
+ currentSpeedIdx = (currentSpeedIdx + 1) % speeds.length;
+ const spd = speeds[currentSpeedIdx];
+ videoEl.playbackRate = spd;
+ document.getElementById("speedBtn").textContent = spd + "x";
+}
+
+function setSpeed(val){
+ videoEl.playbackRate = Number(val);
+}
+
+function toggleSubtitles(){
+ alert("Subtitles toggled (Demo mode).");
+}
+
+function togglePlayerFullscreen(){
+ const wrapper = document.getElementById("playerWrapper");
+ if(wrapper.requestFullscreen) wrapper.requestFullscreen();
+ else if(wrapper.webkitRequestFullscreen) wrapper.webkitRequestFullscreen();
 }
 
 function changeQuality(){ document.getElementById("playerNotice").textContent="Quality updated."; }
